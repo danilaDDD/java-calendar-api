@@ -1,0 +1,55 @@
+package com.calendar.services;
+
+import com.calendar.models.Event;
+import com.calendar.models.User;
+import com.calendar.repositories.EventRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Service
+public class EventService {
+    @Autowired
+    EventRepository repository;
+
+    public List<Event> findAll(){
+        return repository.findAll();
+    }
+
+    public List<Event> findByUser(User user){
+        return repository.findEventsByUser(user);
+    }
+
+    public List<Event> findByUserAndStatus(User user, Event.EventStatus status){
+        return repository.findEventsByUserAndStatus(user, status);
+    }
+
+    public Event findById(Long id){
+        return repository.findUserById(id);
+    }
+
+    public List<Event> findByStatus(Event.EventStatus status){
+        return repository.findEventsByStatus(status);
+    }
+
+    public Set<Event.EventStatus> statusList(){
+        return Arrays.stream(Event.EventStatus.values()).collect(Collectors.toSet());
+    }
+
+    public Event save(Event event){
+        return repository.save(event);
+    }
+
+    public Event update(Long id, Event event){
+        if(repository.findUserById(id) != null){
+            return repository.save(event);
+        }
+        else{
+            return null;
+        }
+    }
+}

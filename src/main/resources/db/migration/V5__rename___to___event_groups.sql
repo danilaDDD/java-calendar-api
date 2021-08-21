@@ -1,0 +1,1 @@
+ALTER TABLE event_group RENAME TO event_groups;

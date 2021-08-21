@@ -1,10 +1,11 @@
 package com.calendar.models;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "event_group")
+@Table(name = "event_groups")
 public class EventGroup {
 
     @Id
@@ -13,6 +14,9 @@ public class EventGroup {
 
     @Column(name = "name",nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
+    private List<Event> events;
 
     @Override
     public boolean equals(Object obj) {

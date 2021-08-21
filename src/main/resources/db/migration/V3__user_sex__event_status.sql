@@ -1,0 +1,11 @@
+ALTER TABLE users
+    ADD sex VARCHAR(255);
+
+ALTER TABLE users
+    ALTER COLUMN sex SET NOT NULL;
+
+ALTER TABLE events
+    ADD status VARCHAR(255);
+
+ALTER TABLE events
+    ALTER COLUMN status SET NOT NULL;

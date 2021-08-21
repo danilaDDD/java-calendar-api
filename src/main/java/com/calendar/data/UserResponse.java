@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Setter @Getter
 public class UserResponse {
+    private Integer id;
     private String login, fio, email;
     private int age;
     private boolean status;
@@ -18,6 +19,7 @@ public class UserResponse {
                 .setFio(user.getFio())
                 .setEmail(user.getEmail())
                 .setAge(user.getAge())
-                .setStatus(user.isStatus());
+                .setStatus(user.isStatus())
+                .setId(user.getId());
     }
 }

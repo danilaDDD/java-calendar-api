@@ -1,0 +1,2 @@
+ALTER TABLE events
+    ALTER COLUMN comment DROP NOT NULL;

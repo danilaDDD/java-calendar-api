@@ -13,15 +13,17 @@ import java.util.List;
 public class EventGroupService {
 
     @Autowired
-    EventGroupRepository eventNameRepository;
+    EventGroupRepository repository;
 
-    @Transactional
     public List<EventGroup> findAll(){
-        return (List<EventGroup>)eventNameRepository.findAll();
+        return (List<EventGroup>) repository.findAll();
     }
 
-    @Transactional
+    public EventGroup findById(Long id){
+        return repository.findEventGroupById(id);
+    }
+
     public EventGroup save(EventGroup eventGroup){
-        return eventNameRepository.save(eventGroup);
+        return repository.save(eventGroup);
     }
 }
