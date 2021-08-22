@@ -21,7 +21,7 @@ public class UserService {
 
     }
 
-    public User findById(Integer id){
+    public User findById(Long id){
         return repository.findUserById(id);
     }
 

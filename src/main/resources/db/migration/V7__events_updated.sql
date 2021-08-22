@@ -1,5 +1,0 @@
-ALTER TABLE events
-    ADD updated TIMESTAMP WITHOUT TIME ZONE;
-
-ALTER TABLE events
-    ALTER COLUMN updated SET NOT NULL;

@@ -1,5 +1,0 @@
-ALTER TABLE events
-    ADD group_id BIGINT;
-
-ALTER TABLE events
-    ADD CONSTRAINT FK_EVENTS_ON_GROUP FOREIGN KEY (group_id) REFERENCES event_group (id);

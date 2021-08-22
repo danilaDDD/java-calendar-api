@@ -1,5 +1,0 @@
-ALTER TABLE events
-    ALTER COLUMN group_id SET NOT NULL;
-
-ALTER TABLE events
-    ALTER COLUMN user_id SET NOT NULL;

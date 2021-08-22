@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Setter @Getter
 public class UserResponse {
-    private Integer id;
+    private Long id;
     private String login, fio, email;
     private int age;
     private boolean status;

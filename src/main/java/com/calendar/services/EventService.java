@@ -6,6 +6,7 @@ import com.calendar.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -45,11 +46,7 @@ public class EventService {
     }
 
     public Event update(Long id, Event event){
-        if(repository.findUserById(id) != null){
-            return repository.save(event);
-        }
-        else{
-            return null;
-        }
+         event.setUpdated(LocalDateTime.now());
+         return repository.save(event);
     }
 }

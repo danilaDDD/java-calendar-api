@@ -1,35 +1,44 @@
-package com.calendar.validators;
+package com.calendar.data;
 
 import com.calendar.models.Event;
 import com.calendar.models.EventGroup;
 import com.calendar.models.User;
+import com.calendar.requests.PostRequest;
 import com.calendar.services.EventGroupService;
 import com.calendar.services.UserService;
+import com.calendar.utils.DateParser;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 // FIXME repaint to validator
 
+@Component
 @Setter
 @Getter
-public class EventPostRequest {
+public class EventPostRequest implements PostRequest<Event> {
     @Setter private EventGroupService eventGroupService;
     @Setter private UserService userService;
+
+    private DateParser dateParser;
+
+    @Autowired
+    public void setDateParser(DateParser dateParser){
+        this.dateParser = dateParser;
+    }
 
     String name;
     String comment = "";
     String played;
 
-    Integer userId;
+    Long userId;
     Long groupId;
-    String status = "";
+    String status = Event.EventStatus.ENABLE.name();
 
-
+    @Override
     public Event create(){
         Event event = new Event();
         event.setName(name);
@@ -37,9 +46,9 @@ public class EventPostRequest {
         if(comment.length() > 0)
             event.setComment(comment);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        LocalDateTime playedDateTime = LocalDateTime.parse(played, formatter);
-        event.setPlayed(playedDateTime);
+        LocalDateTime played = dateParser.parseDateTime(this.getPlayed());
+        if(played.compareTo(LocalDateTime.now()) > -1)
+            event.setPlayed(played);
 
         EventGroup group = eventGroupService.findById(groupId);
         event.setGroup(group);
