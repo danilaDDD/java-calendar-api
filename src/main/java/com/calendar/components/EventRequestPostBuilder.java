@@ -1,28 +1,26 @@
 package com.calendar.components;
 
 import com.calendar.data.EventPostRequest;
+import com.calendar.interfacies.RequestPostBuilder;
 import com.calendar.models.Event;
 
 import com.calendar.models.EventGroup;
 import com.calendar.models.User;
 import com.calendar.services.EventGroupService;
-import com.calendar.services.EventService;
 import com.calendar.services.UserService;
-import com.calendar.utils.DateParser;
+import com.calendar.interfacies.DateFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
 public class EventRequestPostBuilder implements RequestPostBuilder<Event, EventPostRequest> {
-    private DateParser dateParser;
+    private DateFormatter dateParser;
     private UserService userService;
     private EventGroupService eventGroupService;
 
 
     @Autowired
-    public EventRequestPostBuilder(DateParser dateParser, UserService userService, EventGroupService eventGroupService){
+    public EventRequestPostBuilder(DateFormatter dateParser, UserService userService, EventGroupService eventGroupService){
         this.dateParser = dateParser;
         this.userService = userService;
         this.eventGroupService = eventGroupService;

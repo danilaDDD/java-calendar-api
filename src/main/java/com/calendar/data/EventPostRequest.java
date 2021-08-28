@@ -6,7 +6,7 @@ import com.calendar.models.User;
 import com.calendar.requests.PostRequest;
 import com.calendar.services.EventGroupService;
 import com.calendar.services.UserService;
-import com.calendar.utils.DateParser;
+import com.calendar.interfacies.DateFormatter;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,10 @@ public class EventPostRequest implements PostRequest<Event> {
     @Setter private EventGroupService eventGroupService;
     @Setter private UserService userService;
 
-    private DateParser dateParser;
+    private DateFormatter dateParser;
 
     @Autowired
-    public void setDateParser(DateParser dateParser){
+    public void setDateParser(DateFormatter dateParser){
         this.dateParser = dateParser;
     }
 

@@ -2,31 +2,50 @@ package com.calendar.controllers;
 
 import com.calendar.components.EventRequestPostBuilder;
 import com.calendar.components.EventRequestPutBuilder;
-import com.calendar.data.EventResponce;
+import com.calendar.data.EventResponse;
 import com.calendar.models.Event;
 import com.calendar.data.EventPutRequest;
-import com.calendar.services.EventGroupService;
+import com.calendar.models.User;
 import com.calendar.services.EventService;
-import com.calendar.services.UserService;
 import com.calendar.data.EventPostRequest;
+
+import com.calendar.services.UserService;
+import com.calendar.interfacies.DateFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/events/")
 public class EventController {
-    private EventService service;
+    private EventService eventService;
+    private UserService userService;
+
     private EventRequestPostBuilder eventRequestPostBuilder;
     private EventRequestPutBuilder eventRequestPutBuilder;
 
+    private DateFormatter dateParser;
+
     @Autowired
-    public void setService(EventService service){
-        this.service = service;
+    public void setDateParser(DateFormatter dateParser){
+        this.dateParser = dateParser;
+    }
+
+    @Autowired
+    public void setEventService(EventService eventService){
+        this.eventService = eventService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService){
+        this.userService = userService;
     }
 
     @Autowired
@@ -40,6 +59,49 @@ public class EventController {
     }
 
 
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<EventResponse> findAll(
+            @RequestParam(name = "userId", required = true) Long userId,
+            @RequestParam(name = "status", required = false) String status, 
+            @RequestParam(name = "from", required = false) String fromDateString,
+            @RequestParam(name = "to", required = false) String toDateString
+    )
+    {
+        User user = userService.findById(userId);
+        List<Event> events = eventService.findByUser(user);
+
+        boolean buildFromStream = false;
+        Stream<Event> eventsStream = events.stream();
+
+        if(status != null){
+            Event.EventStatus eventStatus = Event.EventStatus.valueOf(status);
+            eventsStream = eventsStream.filter(event -> event.getStatus().equals(eventStatus));
+        }
+
+        if(fromDateString != null){
+            LocalDateTime fromDate = dateParser.parseDateTime(fromDateString);
+            eventsStream = eventsStream.filter(event -> event.getPlayed().compareTo(fromDate) > 0);
+        }
+
+        if(toDateString != null){
+            LocalDateTime toDate = dateParser.parseDateTime(toDateString);
+            eventsStream = eventsStream.filter(event -> event.getPlayed().compareTo(toDate) < 0);
+        }
+
+
+        events = eventsStream
+                .sorted(new Comparator<Event>() {
+                    @Override
+                    public int compare(Event e1, Event e2) {
+                        return e1.getPlayed().compareTo(e2.getPlayed());
+                    }
+                })
+
+                .collect(Collectors.toList());
+
+        return serialize(events);
+    }
+
     @RequestMapping(value = "/{id}/", method = RequestMethod.PUT)
     public ResponseEntity<Void> putEvent(
             @PathVariable(name="id", required = true) Long id,
@@ -49,7 +111,7 @@ public class EventController {
         try {
             Event event = eventRequestPutBuilder.build(id, requestBody);
             if(event != null) {
-                service.update(id, event);
+                eventService.update(id, event);
                 return ResponseEntity.status(200).build();
             }
         }catch (Exception e){
@@ -65,9 +127,9 @@ public class EventController {
         try{
             Event event = eventRequestPostBuilder.build(requestBody);
             if(event != null) {
-                Event savedEvent = service.save(event);
+                Event savedEvent = eventService.save(event);
                 if(savedEvent != null)
-                    return ResponseEntity.status(200).build();
+                    return ResponseEntity.status(201).build();
             }
 
         }catch (Exception e){
@@ -78,14 +140,16 @@ public class EventController {
         return ResponseEntity.status(400).build();
     }
 
-    public List<EventResponce> serialize(List<Event> events){
-        return events.stream().map(EventResponce::new).collect(Collectors.toList());
+    public List<EventResponse> serialize(List<Event> events){
+        return events.stream().map(EventResponse::new).collect(Collectors.toList());
     }
 
-    public EventResponce serialize(Event event){
+    public EventResponse serialize(Event event){
         if(event != null)
-            return new EventResponce(event);
+            return new EventResponse(event);
         else
-            return new EventResponce();
+            return new EventResponse();
     }
+
+
 }

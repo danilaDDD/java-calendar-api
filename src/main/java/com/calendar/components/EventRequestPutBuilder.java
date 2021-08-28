@@ -1,22 +1,22 @@
 package com.calendar.components;
 
-import antlr.StringUtils;
 import com.calendar.data.EventPutRequest;
+import com.calendar.interfacies.RequestPutBuilder;
 import com.calendar.models.Event;
 import com.calendar.services.EventService;
-import com.calendar.utils.DateParser;
+import com.calendar.interfacies.DateFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
-public class EventRequestPutBuilder implements RequestPutBuilder<Event, EventPutRequest>{
-    private DateParser dateParser;
+public class EventRequestPutBuilder implements RequestPutBuilder<Event, EventPutRequest> {
+    private DateFormatter dateParser;
     private EventService eventService;
 
     @Autowired
-    public EventRequestPutBuilder(DateParser dateParser, EventService eventService){
+    public EventRequestPutBuilder(DateFormatter dateParser, EventService eventService){
         this.eventService = eventService;
         this.dateParser = dateParser;
     }

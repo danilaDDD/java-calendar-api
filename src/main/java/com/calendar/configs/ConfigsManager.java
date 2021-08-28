@@ -1,10 +1,9 @@
 package com.calendar.configs;
 
 
-import com.calendar.utils.DateParser;
-import com.calendar.utils.SimpleDateParser;
+import com.calendar.interfacies.DateFormatter;
+import com.calendar.components.SimpleDateFormatter;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -23,7 +22,7 @@ public class ConfigsManager {
     }
 
     @Bean
-    public DateParser dateParser(){
-        return new SimpleDateParser();
+    public DateFormatter dateParser(){
+        return new SimpleDateFormatter();
     }
 }
