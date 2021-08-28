@@ -49,4 +49,12 @@ public class EventService {
          event.setUpdated(LocalDateTime.now());
          return repository.save(event);
     }
+
+    public Event delete(Long id){
+        Event event = findById(id);
+        if(event != null)
+            repository.delete(event);
+
+        return event;
+    }
 }

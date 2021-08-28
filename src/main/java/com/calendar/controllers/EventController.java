@@ -12,13 +12,16 @@ import com.calendar.data.EventPostRequest;
 import com.calendar.services.UserService;
 import com.calendar.interfacies.DateFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -90,16 +93,26 @@ public class EventController {
 
 
         events = eventsStream
-                .sorted(new Comparator<Event>() {
-                    @Override
-                    public int compare(Event e1, Event e2) {
-                        return e1.getPlayed().compareTo(e2.getPlayed());
-                    }
-                })
-
+                .sorted(Comparator.comparing(Event::getPlayed))
                 .collect(Collectors.toList());
 
         return serialize(events);
+    }
+
+    @RequestMapping(value = "/{id}/", method = RequestMethod.GET)
+    public ResponseEntity<EventResponse> findById(
+            @PathVariable(name = "id", required = true) Long id
+    ){
+        Event event = eventService.findById(id);
+        if(event != null)
+            return new ResponseEntity<>(serialize(eventService.findById(id)), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(value = "/status/", method = RequestMethod.GET)
+    public List<Event.EventStatus> status(){
+        return Arrays.stream(Event.EventStatus.values()).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.PUT)
@@ -138,6 +151,15 @@ public class EventController {
         }
 
         return ResponseEntity.status(400).build();
+    }
+
+    @RequestMapping(value = "/{id}/", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> deleteEvent(@PathVariable(name = "id", required = true) Long id){
+        Event deletedEvent = eventService.delete(id);
+        if(deletedEvent != null)
+            return ResponseEntity.ok().build();
+        else
+            return ResponseEntity.notFound().build();
     }
 
     public List<EventResponse> serialize(List<Event> events){

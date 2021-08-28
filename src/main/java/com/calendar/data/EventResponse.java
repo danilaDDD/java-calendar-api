@@ -20,9 +20,9 @@ import java.time.format.DateTimeFormatter;
 public class EventResponse implements Serializable {
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
-    String name = "";
-    String comment = "";
-    Event.EventStatus status = Event.EventStatus.ENABLE;
+    String name;
+    String comment;
+    Event.EventStatus status;
     String played;
     String group;
     String user;
