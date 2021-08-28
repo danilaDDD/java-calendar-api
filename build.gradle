@@ -8,12 +8,12 @@ plugins {
 	id 'org.springframework.boot' version '2.5.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id "org.flywaydb.flyway" version "7.13.0"
+	id "org.flywaydb.flyway" version "7.12.0"
 }
 
 group = 'ru.dhabits.spring_boot_example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = "16"
+sourceCompatibility = "14"
 
 repositories {
 	mavenCentral()
@@ -44,7 +44,11 @@ test {
 	useJUnitPlatform()
 }
 
-targetCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_14
+
+apply plugin: 'war'
+apply plugin: 'application'
+
 
 
 

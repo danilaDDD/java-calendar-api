@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -30,7 +31,7 @@ public class UserService {
     }
 
     public List<User> active(List<User> users){
-        return users.stream().filter(User::isStatus).toList();
+        return users.stream().filter(User::isStatus).collect(Collectors.toList());
 
     }
 }

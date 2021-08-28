@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users/")
@@ -19,7 +20,7 @@ public class UserController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UserResponse> findAll(){
         return userService.findAll().stream()
-                .map(UserResponse::new).toList();
+                .map(UserResponse::new).collect(Collectors.toList());
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
