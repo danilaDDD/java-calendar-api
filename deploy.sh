@@ -1,6 +1,6 @@
 # !/bin/bash
 source_war=build/libs/calendar-0.0.1-SNAPSHOT-plain.war
-target_war=/../../webapps/calendar-api.war
+target_war=../../webapps/calendar-api.war
 
 echo "start deploy"
 ./gradlew war
