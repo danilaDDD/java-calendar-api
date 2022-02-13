@@ -3,15 +3,24 @@ package com.calendar.services;
 import com.calendar.models.User;
 import com.calendar.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService {
-    @Autowired
+public class UserService implements UserDetailsService {
     UserRepository repository;
+
+    @Autowired
+    public void setUserRepository(UserRepository repository){
+        this.repository = repository;
+    }
 
     public List<User> findAll(){
         return active(repository.findAll());
@@ -33,5 +42,19 @@ public class UserService {
     public List<User> active(List<User> users){
         return users.stream().filter(User::isStatus).collect(Collectors.toList());
 
+    }
+
+    public User findUserByLogin(String login){
+        return repository.findUserByLogin(login);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        User u = findUserByLogin(login);
+        if (Objects.isNull(u)) {
+            throw new UsernameNotFoundException(String.format("User %s is not found", login));
+        }
+        return new org.springframework.security.core.userdetails.User(u.getLogin(), u.getPassword(), true, true,
+                true, true, new HashSet<>());
     }
 }
