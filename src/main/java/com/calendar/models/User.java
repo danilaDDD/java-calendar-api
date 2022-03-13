@@ -5,16 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Accessors(chain = true)
 @Entity
@@ -51,6 +46,10 @@ public class User {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Setter @Getter private Sex sex = Sex.UNKNOWN;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = true)
+    @Getter @Setter  private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Event> events;
