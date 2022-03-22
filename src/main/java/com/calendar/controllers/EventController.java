@@ -2,20 +2,24 @@ package com.calendar.controllers;
 
 import com.calendar.components.EventRequestPostBuilder;
 import com.calendar.components.EventRequestPutBuilder;
-import com.calendar.data.EventResponse;
-import com.calendar.models.Event;
+import com.calendar.data.EventPostRequest;
 import com.calendar.data.EventPutRequest;
+import com.calendar.data.EventResponse;
+import com.calendar.interfacies.DateFormatter;
+import com.calendar.models.Event;
 import com.calendar.models.User;
 import com.calendar.services.EventService;
-import com.calendar.data.EventPostRequest;
-
 import com.calendar.services.UserService;
-import com.calendar.interfacies.DateFormatter;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -26,6 +30,7 @@ import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/events/")
+@Api(value = "events/", tags = {"Управление событиями"})
 public class EventController {
     private EventService eventService;
     private UserService userService;
@@ -62,6 +67,18 @@ public class EventController {
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(
+            value = "Получить все события",
+            httpMethod = "GET",
+            produces = "",
+            response = Json.class
+    )
+    @ApiResponses( value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "Bad request"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    }
+    )
     public List<EventResponse> findAll(
             @RequestParam(name = "userId", required = true) Long userId,
             @RequestParam(name = "status", required = false) String status, 
