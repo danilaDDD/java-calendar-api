@@ -1,0 +1,12 @@
+CREATE TABLE role
+(
+    id   INTEGER NOT NULL,
+    name VARCHAR(255),
+    CONSTRAINT pk_role PRIMARY KEY (id)
+);
+
+ALTER TABLE users
+    ADD role_id INTEGER;
+
+ALTER TABLE users
+    ADD CONSTRAINT FK_USERS_ON_ROLE FOREIGN KEY (role_id) REFERENCES role (id);

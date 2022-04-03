@@ -1,51 +1,55 @@
 package com.calendar.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-
 import java.util.List;
 import java.util.Objects;
 
 @Accessors(chain = true)
-@Setter @Getter
 @Entity
 @Table(name = "users")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter private Long id;
 
-    @Column
-    private String login;
 
     @Column
-    private String password;
+    @Setter @Getter private String login;
 
     @Column
-    @Nullable
-    private String fio;
+    @Setter @Getter private String password;
 
     @Column
     @Nullable
-    private String email;
+    @Setter @Getter private String fio;
 
     @Column
     @Nullable
-    private int age;
+    @Setter @Getter private String email;
 
     @Column
-    private boolean status = true;
+    @Nullable
+    @Setter @Getter private int age;
+
+    @Column
+    @Setter @Getter private boolean status = true;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Sex sex = Sex.UNKNOWN;
+    @Setter @Getter private Sex sex = Sex.UNKNOWN;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = true)
+    @Getter @Setter  private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Event> events;
