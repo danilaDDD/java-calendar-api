@@ -18,15 +18,15 @@ public class JwtProvider {
     @Value("$(jwt.secret)")
     private String jwtSecret;
 
-    @Value("#{${expiration.days}}")
-    private int expirationDays;
+    @Value("$(expiration.days)")
+    private String strExpirationDays;
 
     public int getExpirationDays() {
-        return expirationDays;
+        return Integer.parseInt(strExpirationDays);
     }
 
     public String generateToken(String login) {
-        Date date = Date.from(LocalDate.now().plusDays(expirationDays).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        Date date = Date.from(LocalDate.now().plusDays(getExpirationDays()).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()
                 .setSubject(login)
                 .setExpiration(date)
