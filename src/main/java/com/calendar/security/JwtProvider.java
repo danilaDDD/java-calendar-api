@@ -18,11 +18,11 @@ public class JwtProvider {
     @Value("$(jwt.secret)")
     private String jwtSecret;
 
-    @Value("$(expiration.days)")
-    private String strExpirationDays;
+    @Value("#{${expiration.days}}")
+    private int expirationDays;
 
     public int getExpirationDays() {
-        return Integer.parseInt(strExpirationDays);
+        return this.expirationDays;
     }
 
     public String generateToken(String login) {

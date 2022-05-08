@@ -9,15 +9,14 @@ import com.calendar.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 public class AuthController {
     private UserService userService;
     private JwtProvider jwtProvider;
-    private RoleService roleService;
 
     @Autowired
     public void setUserService(UserService service){
@@ -29,14 +28,7 @@ public class AuthController {
         this.jwtProvider = provider;
     }
 
-    @Autowired
-    public void setRoleService(RoleService service){
-        this.roleService = service;
-    }
-
-
-
-    @PostMapping("/signin")
+    @GetMapping("/signin")
     public ResponseEntity<AuthResponse> auth(@RequestBody AuthRequest request) {
         User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         if(user != null) {

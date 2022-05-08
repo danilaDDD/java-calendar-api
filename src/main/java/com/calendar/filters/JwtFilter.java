@@ -3,27 +3,24 @@ package com.calendar.filters;
 import com.calendar.configs.CustomUserDetails;
 import com.calendar.configs.CustomUserDetailsService;
 import com.calendar.security.JwtProvider;
-import lombok.extern.java.Log;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.springframework.util.StringUtils.hasText;
+import static io.jsonwebtoken.lang.Strings.hasText;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
-@Log
-public class JwtFilter extends GenericFilterBean {
-
-    public static final String AUTHORIZATION = "Authorization";
+public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtProvider jwtProvider;
@@ -31,17 +28,18 @@ public class JwtFilter extends GenericFilterBean {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         logger.info("do filter...");
-        String token = getTokenFromRequest((HttpServletRequest) servletRequest);
+        String token = getTokenFromRequest(request);
         if (token != null && jwtProvider.validateToken(token)) {
             String userLogin = jwtProvider.getLoginFromToken(token);
             CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
-        filterChain.doFilter(servletRequest, servletResponse);
+        filterChain.doFilter(request, response);
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
@@ -52,3 +50,4 @@ public class JwtFilter extends GenericFilterBean {
         return null;
     }
 }
+
