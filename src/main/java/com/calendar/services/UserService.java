@@ -43,10 +43,6 @@ public class UserService implements UserDetailsService {
     }
 
     public User createUser(User user){
-        String password = user.getPassword();
-        String hashed = passwordEncoder.encode(password);
-        user.setPassword(hashed);
-
         return repository.save(user);
     }
 

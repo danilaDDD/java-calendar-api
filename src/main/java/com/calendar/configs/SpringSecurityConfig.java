@@ -35,9 +35,4 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Bean
-//    public JwtFilter jwtFilterBean() throws Exception {
-//        return new JwtFilter();
-//    }
 }
