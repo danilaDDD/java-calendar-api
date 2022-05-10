@@ -2,5 +2,3 @@
 /.idea/
 /.mvn/
 /build/
-
-src/resources/application.properties

@@ -21,11 +21,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter private Long id;
 
-
     @Column
     @Setter @Getter private String login;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     @Setter @Getter private String password;
 
     @Column
@@ -47,9 +46,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Setter @Getter private Sex sex = Sex.UNKNOWN;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = true)
-    @Getter @Setter  private Role role;
+    @Column(nullable = false)
+    @Getter @Setter private Role role = Role.USER;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Event> events;
@@ -74,5 +72,10 @@ public class User {
         MALE,
         FEMALE,
         UNKNOWN
+    }
+
+    public static enum Role{
+        ADMIN,
+        USER
     }
 }

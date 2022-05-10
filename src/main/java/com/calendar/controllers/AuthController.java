@@ -4,14 +4,13 @@ import com.calendar.data.AuthRequest;
 import com.calendar.data.AuthResponse;
 import com.calendar.models.User;
 import com.calendar.security.JwtProvider;
-import com.calendar.services.RoleService;
 import com.calendar.services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
 public class AuthController {

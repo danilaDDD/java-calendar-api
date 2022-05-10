@@ -1,0 +1,9 @@
+ALTER TABLE users
+    DROP COLUMN role_id;
+
+DROP TABLE  role;
+
+ALTER TABLE users
+    ADD COLUMN role VARCHAR(255) DEFAULT 'USER';
+
+

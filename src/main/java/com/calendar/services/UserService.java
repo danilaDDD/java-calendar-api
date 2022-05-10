@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -16,6 +17,12 @@ import java.util.stream.Collectors;
 @Service
 public class UserService implements UserDetailsService {
     UserRepository repository;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder encoder){
+        this.passwordEncoder = encoder;
+    }
 
     @Autowired
     public void setUserRepository(UserRepository repository){
@@ -36,6 +43,10 @@ public class UserService implements UserDetailsService {
     }
 
     public User createUser(User user){
+        String password = user.getPassword();
+        String hashed = passwordEncoder.encode(password);
+        user.setPassword(hashed);
+
         return repository.save(user);
     }
 
