@@ -54,6 +54,14 @@ dependencies {
 //	implementation "org.gradle.api.plugins:gradle-heroku:0.9.6"
 }
 
+bootJar {
+	archiveClassifier.set('boot')
+}
+
+jar {
+	archiveClassifier.set('')
+}
+
 test {
 	useJUnitPlatform()
 }
