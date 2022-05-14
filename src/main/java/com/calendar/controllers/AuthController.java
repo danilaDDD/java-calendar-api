@@ -27,7 +27,7 @@ public class AuthController {
         this.jwtProvider = provider;
     }
 
-    @GetMapping("/signin")
+    @PostMapping("/signin")
     public ResponseEntity<AuthResponse> auth(@RequestBody AuthRequest request) {
         User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         if(user != null) {
