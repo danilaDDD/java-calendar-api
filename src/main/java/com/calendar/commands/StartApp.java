@@ -4,12 +4,12 @@ package com.calendar.commands;
 import com.calendar.models.User;
 import com.calendar.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
+//import org.springframework.shell.standard.ShellComponent;
+//import org.springframework.shell.standard.ShellMethod;
 
 import java.util.Scanner;
 
-@ShellComponent
+//@ShellComponent
 public class StartApp {
     Scanner scanner = new Scanner(System.in);
     UserService userService;
@@ -19,7 +19,7 @@ public class StartApp {
         this.userService = service;
     }
 
-    @ShellMethod("Add need data before start app")
+//    @ShellMethod("Add need data before start app")
     public void start(){
         System.out.println("Creating admin user");
         User user = new User();
