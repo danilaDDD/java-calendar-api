@@ -1,5 +1,7 @@
 package com.calendar.requests;
 
+import com.calendar.models.User;
+
 public interface PostRequest<Entity> {
-    Entity create();
+    Entity create(User user);
 }

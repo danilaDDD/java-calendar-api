@@ -20,14 +20,13 @@ public class EventRequestPostBuilder implements RequestPostBuilder<Event, EventP
 
 
     @Autowired
-    public EventRequestPostBuilder(DateFormatter dateParser, UserService userService, EventGroupService eventGroupService){
+    public EventRequestPostBuilder(DateFormatter dateParser, EventGroupService eventGroupService){
         this.dateParser = dateParser;
-        this.userService = userService;
         this.eventGroupService = eventGroupService;
     }
 
     @Override
-    public Event build(EventPostRequest request) {
+    public Event build(EventPostRequest request, User user) {
         Event event = new Event();
 
         event.setName(request.getName());
@@ -39,15 +38,11 @@ public class EventRequestPostBuilder implements RequestPostBuilder<Event, EventP
         String playedString = request.getPlayed();
         event.setPlayed(dateParser.parseDateTime(playedString));
 
-        Long userId = request.getUserId();
-        User user = userService.findById(userId);
-        if(event != null)
-            event.setUser(user);
-
-        Long groupId = request.getGroupId();
-        EventGroup group = eventGroupService.findById(groupId);
-        if(group != null)
-            event.setGroup(group);
+//        Long groupId = request.getGroupId();
+//        EventGroup group = eventGroupService.findById(groupId);
+//        if(group != null)
+//            event.setGroup(group);
+        event.setUser(user);
 
         String status = request.getStatus();
         if(status != null)

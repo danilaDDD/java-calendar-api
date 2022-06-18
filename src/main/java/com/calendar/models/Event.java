@@ -23,7 +23,7 @@ public class Event implements Serializable {
     @Column(nullable = false, length = 300)
     private String name;
 
-    @Column(nullable = true, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String comment;
 
     @Column(nullable = false)
@@ -44,7 +44,7 @@ public class Event implements Serializable {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = true)
     private EventGroup group;
 
     @Override
@@ -57,7 +57,7 @@ public class Event implements Serializable {
         return Objects.hash(name, played);
     }
 
-    public static enum EventStatus{
+    public enum EventStatus{
         ENABLE,
         PLAYED,
         CANCELED,

@@ -1,0 +1,3 @@
+ALTER TABLE events
+ALTER COLUMN group_id
+DROP NOT NULL;

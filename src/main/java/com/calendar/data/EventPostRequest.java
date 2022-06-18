@@ -33,13 +33,9 @@ public class EventPostRequest implements PostRequest<Event> {
     String name;
     String comment = "";
     String played;
-
-    Long userId;
-    Long groupId;
     String status = Event.EventStatus.ENABLE.name();
-
     @Override
-    public Event create(){
+    public Event create(User user){
         Event event = new Event();
         event.setName(name);
 
@@ -50,10 +46,9 @@ public class EventPostRequest implements PostRequest<Event> {
         if(played.compareTo(LocalDateTime.now()) > -1)
             event.setPlayed(played);
 
-        EventGroup group = eventGroupService.findById(groupId);
-        event.setGroup(group);
+//        EventGroup group = eventGroupService.findById(groupId);
+//        event.setGroup(group);
 
-        User user = userService.findById(userId);
         event.setUser(user);
 
         if(status.length() > 0) {

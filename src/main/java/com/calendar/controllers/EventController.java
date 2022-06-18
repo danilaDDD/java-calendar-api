@@ -8,6 +8,7 @@ import com.calendar.data.EventResponse;
 import com.calendar.interfacies.DateFormatter;
 import com.calendar.models.Event;
 import com.calendar.models.User;
+import com.calendar.security.JwtProvider;
 import com.calendar.services.EventService;
 import com.calendar.services.UserService;
 import io.swagger.annotations.Api;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.spring.web.json.Json;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -39,6 +41,13 @@ public class EventController {
     private EventRequestPutBuilder eventRequestPutBuilder;
 
     private DateFormatter dateParser;
+
+    private JwtProvider jwtProvider;
+
+    @Autowired
+    public void setJwtProvider(JwtProvider jwtProvider){
+        this.jwtProvider = jwtProvider;
+    }
 
     @Autowired
     public void setDateParser(DateFormatter dateParser){
@@ -80,16 +89,15 @@ public class EventController {
     }
     )
     public List<EventResponse> findAll(
-            @RequestParam(name = "userId", required = true) Long userId,
             @RequestParam(name = "status", required = false) String status, 
             @RequestParam(name = "from", required = false) String fromDateString,
-            @RequestParam(name = "to", required = false) String toDateString
+            @RequestParam(name = "to", required = false) String toDateString,
+            HttpServletRequest request
     )
     {
-        User user = userService.findById(userId);
+        User user = jwtProvider.getUserFromRequest(request);
         List<Event> events = eventService.findByUser(user);
 
-        boolean buildFromStream = false;
         Stream<Event> eventsStream = events.stream();
 
         if(status != null){
@@ -152,9 +160,14 @@ public class EventController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> postEvent(@RequestBody EventPostRequest requestBody){
+    public ResponseEntity<Void> postEvent(
+            @RequestBody EventPostRequest requestBody,
+            HttpServletRequest request
+            ){
         try{
-            Event event = eventRequestPostBuilder.build(requestBody);
+            User user = jwtProvider.getUserFromRequest(request);
+
+            Event event = eventRequestPostBuilder.build(requestBody, user);
             if(event != null) {
                 Event savedEvent = eventService.save(event);
                 if(savedEvent != null)

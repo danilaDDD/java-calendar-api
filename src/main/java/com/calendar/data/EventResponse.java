@@ -24,7 +24,6 @@ public class EventResponse implements Serializable {
     String comment;
     Event.EventStatus status;
     String played;
-    String group;
     String user;
 
     public EventResponse(){}
@@ -36,6 +35,5 @@ public class EventResponse implements Serializable {
         setPlayed(event.getPlayed().format(formatter));
 
         setUser(event.getUser().toString());
-        setGroup(event.getGroup().toString());
     }
 }
