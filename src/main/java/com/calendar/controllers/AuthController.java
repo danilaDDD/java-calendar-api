@@ -2,6 +2,7 @@ package com.calendar.controllers;
 
 import com.calendar.data.AuthRequest;
 import com.calendar.data.AuthResponse;
+import com.calendar.data.UserResponse;
 import com.calendar.models.User;
 import com.calendar.security.JwtProvider;
 import com.calendar.services.UserService;
@@ -27,12 +28,25 @@ public class AuthController {
         this.jwtProvider = provider;
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<AuthResponse> auth(@RequestBody AuthRequest request) {
+    @PostMapping("/get-token/")
+    public ResponseEntity<AuthResponse> getToken(@RequestBody AuthRequest request) {
         User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         if(user != null) {
-            String token = jwtProvider.generateToken(user.getLogin());
-            return new ResponseEntity<>(new AuthResponse(token, jwtProvider.getExpirationDays()), HttpStatus.OK);
+            if (user.isAdmin()) {
+                String token = jwtProvider.generateToken(user.getLogin());
+                return new ResponseEntity<>(new AuthResponse(token, jwtProvider.getExpirationDays()), HttpStatus.OK);
+            }
+        }
+
+        return ResponseEntity.status(403).build();
+    }
+
+    @PostMapping("/signin/")
+    public ResponseEntity<UserResponse> signin(@RequestBody AuthRequest request){
+        User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
+        if(user != null){
+            UserResponse userResponse = new UserResponse(user);
+            return new ResponseEntity<>(userResponse, HttpStatus.OK);
         }
 
         return ResponseEntity.status(403).build();

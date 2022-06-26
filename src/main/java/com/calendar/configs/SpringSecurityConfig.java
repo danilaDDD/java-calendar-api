@@ -38,7 +38,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui.html",
                         "/webjars/**",
 
-                        "/signin")
+                        "/get-token/")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
