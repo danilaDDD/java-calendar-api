@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 public class EventResponse implements Serializable {
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
+    Integer id;
     String name;
     String comment;
     Event.EventStatus status;

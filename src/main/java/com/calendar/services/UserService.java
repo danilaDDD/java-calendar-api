@@ -55,6 +55,17 @@ public class UserService implements UserDetailsService {
         return repository.findUserByLogin(login);
     }
 
+    public User deleteById(Long id){
+        User user = findById(id);
+        if (user != null) {
+            repository.delete(user);
+            return user;
+        }
+
+        return null;
+
+    }
+
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         User u = findUserByLogin(login);

@@ -2,9 +2,12 @@ package com.calendar.controllers;
 
 import com.calendar.components.EventRequestPostBuilder;
 import com.calendar.components.EventRequestPutBuilder;
+import com.calendar.data.DoneResponse;
 import com.calendar.data.EventPostRequest;
 import com.calendar.data.EventPutRequest;
 import com.calendar.data.EventResponse;
+import com.calendar.exceptions.BadRequestException;
+import com.calendar.exceptions.NotFoundException;
 import com.calendar.interfacies.DateFormatter;
 import com.calendar.models.Event;
 import com.calendar.models.User;
@@ -94,6 +97,7 @@ public class EventController {
             @RequestParam(name = "to", required = false) String toDateString,
             HttpServletRequest request
     )
+
     {
         User user = jwtProvider.getUserFromRequest(request);
         List<Event> events = eventService.findByUser(user);
@@ -140,55 +144,49 @@ public class EventController {
     }
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.PUT)
-    public ResponseEntity<Void> putEvent(
+    public ResponseEntity<EventResponse> putEvent(
             @PathVariable(name="id", required = true) Long id,
             @RequestBody EventPutRequest requestBody
             )
     {
-        try {
-            Event event = eventRequestPutBuilder.build(id, requestBody);
-            if(event != null) {
-                eventService.update(id, event);
-                return ResponseEntity.status(200).build();
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(400).build();
-        }
 
-        return ResponseEntity.status(400).build();
+        Event event = eventRequestPutBuilder.build(id, requestBody);
+        if(event != null) {
+            Event updatedEvent = eventService.update(id, event);
+            return new ResponseEntity<EventResponse>(new EventResponse(updatedEvent), HttpStatus.OK);
+        }else
+            throw new NotFoundException("Нет событий с таким id");
+
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> postEvent(
+    public ResponseEntity<EventResponse> postEvent(
             @RequestBody EventPostRequest requestBody,
             HttpServletRequest request
             ){
-        try{
-            User user = jwtProvider.getUserFromRequest(request);
 
-            Event event = eventRequestPostBuilder.build(requestBody, user);
-            if(event != null) {
-                Event savedEvent = eventService.save(event);
-                if(savedEvent != null)
-                    return ResponseEntity.status(201).build();
-            }
+        User user = jwtProvider.getUserFromRequest(request);
 
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(400).build();
-        }
+        Event event = eventRequestPostBuilder.build(requestBody, user);
+        if(event != null) {
+            Event savedEvent = eventService.save(event);
+            if(savedEvent != null)
+                return new ResponseEntity<>(new EventResponse(savedEvent), HttpStatus.CREATED);
+        }else
+            throw new NotFoundException("Нет события с таким id");
 
-        return ResponseEntity.status(400).build();
+
+
+        throw new BadRequestException();
     }
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> deleteEvent(@PathVariable(name = "id", required = true) Long id){
+    public ResponseEntity<EventResponse> deleteEvent(@PathVariable(name = "id", required = true) Long id){
         Event deletedEvent = eventService.delete(id);
         if(deletedEvent != null)
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(new EventResponse(deletedEvent), HttpStatus.OK);
         else
-            return ResponseEntity.notFound().build();
+            throw new NotFoundException();
     }
 
     public List<EventResponse> serialize(List<Event> events){

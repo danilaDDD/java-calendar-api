@@ -3,6 +3,7 @@ package com.calendar.controllers;
 import com.calendar.data.AuthRequest;
 import com.calendar.data.AuthResponse;
 import com.calendar.data.UserResponse;
+import com.calendar.exceptions.GenerateJWTTokenException;
 import com.calendar.models.User;
 import com.calendar.security.JwtProvider;
 import com.calendar.services.UserService;
@@ -10,6 +11,7 @@ import com.calendar.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -32,23 +34,11 @@ public class AuthController {
     public ResponseEntity<AuthResponse> getToken(@RequestBody AuthRequest request) {
         User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         if(user != null) {
-            if (user.isAdmin()) {
-                String token = jwtProvider.generateToken(user.getLogin());
-                return new ResponseEntity<>(new AuthResponse(token, jwtProvider.getExpirationDays()), HttpStatus.OK);
-            }
+            String token = jwtProvider.generateToken(user.getLogin());
+            return new ResponseEntity<>(new AuthResponse(token, jwtProvider.getExpirationDays()), HttpStatus.OK);
+
+        }else{
+            throw new GenerateJWTTokenException();
         }
-
-        return ResponseEntity.status(403).build();
-    }
-
-    @PostMapping("/signin/")
-    public ResponseEntity<UserResponse> signin(@RequestBody AuthRequest request){
-        User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
-        if(user != null){
-            UserResponse userResponse = new UserResponse(user);
-            return new ResponseEntity<>(userResponse, HttpStatus.OK);
-        }
-
-        return ResponseEntity.status(403).build();
     }
 }
