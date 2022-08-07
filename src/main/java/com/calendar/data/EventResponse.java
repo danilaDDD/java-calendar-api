@@ -30,6 +30,9 @@ public class EventResponse implements Serializable {
     public EventResponse(){}
 
     public EventResponse(Event event){
+        if(event.getId() != null)
+            setId(Math.toIntExact(event.getId()));
+
         setName(event.getName());
         setComment(event.getComment());
         setStatus(event.getStatus());

@@ -6,7 +6,6 @@ import com.calendar.data.UserResponse;
 import com.calendar.exceptions.BadRequestException;
 import com.calendar.exceptions.GenerateJWTTokenException;
 import com.calendar.exceptions.NotFoundException;
-import com.calendar.models.ApiClient;
 import com.calendar.models.User;
 import com.calendar.security.JwtProvider;
 import com.calendar.services.UserService;

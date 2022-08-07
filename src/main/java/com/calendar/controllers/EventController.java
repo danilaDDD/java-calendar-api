@@ -166,6 +166,9 @@ public class EventController {
 
         User user = jwtProvider.getUserFromRequest(request);
 
+        if(user == null)
+            throw new BadRequestException();
+
         Event event = eventRequestPostBuilder.build(requestBody, user);
         if(event != null) {
             Event savedEvent = eventService.save(event);
