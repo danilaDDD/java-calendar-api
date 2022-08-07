@@ -2,27 +2,25 @@ package com.calendar.controllers;
 
 import com.calendar.data.AuthRequest;
 import com.calendar.data.AuthResponse;
-import com.calendar.data.UserResponse;
 import com.calendar.exceptions.GenerateJWTTokenException;
-import com.calendar.models.User;
+import com.calendar.models.ApiClient;
 import com.calendar.security.JwtProvider;
-import com.calendar.services.UserService;
+import com.calendar.services.ApiClientService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 public class AuthController {
-    private UserService userService;
+    private ApiClientService apiClientService;
     private JwtProvider jwtProvider;
 
     @Autowired
-    public void setUserService(UserService service){
-        this.userService = service;
+    public void setApiClientService(ApiClientService service){
+        apiClientService = service;
     }
 
     @Autowired
@@ -32,9 +30,9 @@ public class AuthController {
 
     @PostMapping("/get-token/")
     public ResponseEntity<AuthResponse> getToken(@RequestBody AuthRequest request) {
-        User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
-        if(user != null) {
-            String token = jwtProvider.generateToken(user.getLogin());
+        ApiClient client = apiClientService.findByLoginAndPassword(request.getLogin(), request.getPassword());
+        if(client != null) {
+            String token = jwtProvider.generateClientToken(client.getLogin());
             return new ResponseEntity<>(new AuthResponse(token, jwtProvider.getExpirationDays()), HttpStatus.OK);
 
         }else{

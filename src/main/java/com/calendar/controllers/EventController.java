@@ -2,7 +2,6 @@ package com.calendar.controllers;
 
 import com.calendar.components.EventRequestPostBuilder;
 import com.calendar.components.EventRequestPutBuilder;
-import com.calendar.data.DoneResponse;
 import com.calendar.data.EventPostRequest;
 import com.calendar.data.EventPutRequest;
 import com.calendar.data.EventResponse;

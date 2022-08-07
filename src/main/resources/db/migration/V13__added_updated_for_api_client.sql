@@ -1,0 +1,2 @@
+ALTER TABLE api_clients
+    ADD COLUMN updated  TIMESTAMP WITHOUT TIME ZONE NOT NULL default now();

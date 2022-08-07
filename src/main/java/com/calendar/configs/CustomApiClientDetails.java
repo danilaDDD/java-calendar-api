@@ -1,5 +1,6 @@
 package com.calendar.configs;
 
+import com.calendar.models.ApiClient;
 import com.calendar.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,25 +9,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-public class CustomUserDetails implements UserDetails {
+public class CustomApiClientDetails implements UserDetails {
 
     private String login;
     private String password;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
 
-    public static CustomUserDetails fromUserEntityToCustomUserDetails(User user) {
-        CustomUserDetails c = new CustomUserDetails();
+    public static CustomApiClientDetails fromUserEntityToCustomUserDetails(ApiClient client) {
+        CustomApiClientDetails c = new CustomApiClientDetails();
 
-        c.login = user.getLogin();
-        c.password = user.getPassword();
-        c.grantedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()));
+        c.login = client.getLogin();
+        c.password = client.getPassword();
+        c.grantedAuthorities = c.getAuthorities();
 
         return c;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return grantedAuthorities;
+        return null;
     }
 
     @Override

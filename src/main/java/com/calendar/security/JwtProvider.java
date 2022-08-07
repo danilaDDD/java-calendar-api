@@ -25,6 +25,9 @@ public class JwtProvider {
     @Value("$(jwt.secret)")
     private String jwtSecret;
 
+    @Value("$(jwt.user_secret)")
+    private String userSecret;
+
     @Value("#{${expiration.days}}")
     private int expirationDays;
 
@@ -39,12 +42,20 @@ public class JwtProvider {
         this.userService = userService;
     }
 
-    public String generateToken(String login) {
+    public String generateClientToken(String login) {
+        return generateTokenByLogin(login, jwtSecret);
+    }
+
+    public String generateUserToken(String login){
+        return generateTokenByLogin(login, userSecret);
+    }
+
+    public String generateTokenByLogin(String login, String secret){
         Date date = Date.from(LocalDate.now().plusDays(getExpirationDays()).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()
                 .setSubject(login)
                 .setExpiration(date)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 
@@ -58,15 +69,23 @@ public class JwtProvider {
         return false;
     }
 
-    public String getLoginFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+    public String getClientLoginFromToken(String token) {
+        return getLoginFromToken(token, jwtSecret);
+    }
+
+    public String getUserLoginFromToken(String token){
+        return getLoginFromToken(token, userSecret);
+    }
+
+    public String getLoginFromToken(String token, String secret){
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         return claims.getSubject();
     }
 
     public User getUserFromRequest(HttpServletRequest request){
         try {
-            String token = getTokenFromRequest(request);
-            String userLogin = getLoginFromToken(token);
+            String token = request.getHeader("user_token");
+            String userLogin = getUserLoginFromToken(token);
             return this.userService.findUserByLogin(userLogin);
 
         }catch (Exception e){
@@ -74,7 +93,7 @@ public class JwtProvider {
         }
     }
 
-    public String getTokenFromRequest(HttpServletRequest request) {
+    public String getClientTokenFromRequest(HttpServletRequest request) {
         String bearer = request.getHeader(AUTHORIZATION);
         if (hasText(bearer) && bearer.startsWith("Bearer ")) {
             return bearer.substring(7);
