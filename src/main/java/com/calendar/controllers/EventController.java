@@ -85,9 +85,9 @@ public class EventController {
             response = Json.class
     )
     @ApiResponses( value = {
-            @ApiResponse(code = 200, message = "success"),
-            @ApiResponse(code = 400, message = "Bad request"),
-            @ApiResponse(code = 500, message = "Internal server error")
+            @ApiResponse(code = 200, message = "Успешный запрос"),
+            @ApiResponse(code = 400, message = "Некорректный запрос клиента"),
+            @ApiResponse(code = 500, message = "Внутренняя ошибка сервера")
     }
     )
     public List<EventResponse> findAll(

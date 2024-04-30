@@ -32,7 +32,7 @@ public class EventRequestPostBuilder implements RequestPostBuilder<Event, EventP
         event.setName(request.getName());
 
         String comment = request.getComment();
-        if(comment.length() > 0)
+        if(!comment.isEmpty())
             event.setComment(comment);
 
         String playedString = request.getPlayed();
