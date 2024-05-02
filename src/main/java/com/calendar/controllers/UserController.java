@@ -35,7 +35,7 @@ public class UserController {
         userService = service;
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "auth")
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "auth")
     public ResponseEntity<AuthResponse> auth(@RequestBody AuthRequest request){
         User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         if(user != null) {
@@ -53,7 +53,7 @@ public class UserController {
         return userService.findAll().stream()
                 .map(UserResponse::new).collect(Collectors.toList());
     }
-
+    // FIXME: API cannot create users with equal logins
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserResponse> createUser(@RequestBody User user){
         User savedUser = userService.createUser(user);

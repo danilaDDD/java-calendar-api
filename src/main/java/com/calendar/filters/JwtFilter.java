@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static io.jsonwebtoken.lang.Strings.hasText;
-
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -30,7 +28,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        logger.info("do filter...");
         System.out.println("do filter...");
         String token = jwtProvider.getClientTokenFromRequest(request);
 
