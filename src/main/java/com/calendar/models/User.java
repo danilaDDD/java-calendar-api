@@ -19,7 +19,7 @@ public class User implements AuthEntity{
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter private Long id;
 
-    @Column
+    @Column(unique = true)
     private String login;
 
     @Column(columnDefinition = "TEXT")
@@ -47,16 +47,9 @@ public class User implements AuthEntity{
     @Column(nullable = false)
     @Getter @Setter private Role role = Role.USER;
 
-    @Column(nullable = false, name = "admin")
-    private boolean admin = false;
-
-
-    public boolean isAdmin(){
-        return admin;
-    }
-
-    public void isAdmin(boolean admin){
-        this.admin = admin;
+    public User(String login, String encodedPassword) {
+        this.login = login;
+        this.encodedPassword = encodedPassword;
     }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
@@ -97,8 +90,6 @@ public class User implements AuthEntity{
     public void setEncodedPassword(String encodedPassword) {
         this.encodedPassword = encodedPassword;
     }
-
-
 
     public static enum Sex{
         MALE,

@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 
@@ -24,7 +25,7 @@ public class AuthController {
     private Secrets secrets;
 
     @PostMapping("/get-token/")
-    public ResponseEntity<AuthResponse> getToken(@RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponse> getToken(@Valid @RequestBody AuthRequest request) {
         Optional<ApiClient> clientOptional = apiClientService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         if(clientOptional.isPresent()) {
             String token = jwtProvider.generateClientToken(clientOptional.get());
