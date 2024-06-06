@@ -23,7 +23,7 @@ public class User implements AuthEntity{
     private String login;
 
     @Column(columnDefinition = "TEXT")
-    @Setter @Getter String encodedPassword;
+    String encodedPassword;
 
     @Column
     @Nullable

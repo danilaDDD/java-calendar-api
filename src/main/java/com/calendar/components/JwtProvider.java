@@ -1,7 +1,6 @@
 package com.calendar.components;
 
 import com.calendar.models.AuthEntity;
-import com.calendar.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

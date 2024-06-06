@@ -1,7 +1,6 @@
 package com.calendar.services;
 
 import com.calendar.exceptions.BadRequestException;
-import com.calendar.models.ApiClient;
 import com.calendar.models.User;
 import com.calendar.repositories.UserRepository;
 import com.calendar.requests.UserPostRequest;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

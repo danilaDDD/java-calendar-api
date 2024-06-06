@@ -2,7 +2,6 @@ package com.calendar.requests;
 
 import com.calendar.models.User;
 import lombok.Data;
-;
 import org.springframework.lang.Nullable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;

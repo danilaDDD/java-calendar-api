@@ -10,17 +10,6 @@ import java.util.Set;
 @Data
 @Accessors(chain = true)
 public class DoneResponse {
-    public static DoneResponse getSuccessInstance(){
-        return new DoneResponse();
-    }
-
-    public static DoneResponse getFromExceptionInstance(Exception e, HttpStatus httpStatus){
-        DoneResponse done = new DoneResponse()
-                .setHttpStatus(httpStatus);
-
-        done.addError(e.getMessage());
-        return done;
-    }
 
     private boolean success = true;
 

@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 
 @Component
 public class EventRequestPutBuilder implements RequestPutBuilder<Event, EventPutRequest> {
-    private DateFormatter dateParser;
-    private EventService eventService;
+    private final DateFormatter dateParser;
+    private final EventService eventService;
 
     @Autowired
     public EventRequestPutBuilder(DateFormatter dateParser, EventService eventService){
