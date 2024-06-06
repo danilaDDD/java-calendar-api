@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 @Setter @Getter
 public class UserResponse {
     private Long id;
-    private String login, fio, email;
+    private String login, fio, email, sex;
     private int age;
     private boolean status;
 
@@ -20,6 +20,7 @@ public class UserResponse {
                 .setEmail(user.getEmail())
                 .setAge(user.getAge())
                 .setStatus(user.isStatus())
+                .setSex(user.getSex().toString())
                 .setId(user.getId());
     }
 }
