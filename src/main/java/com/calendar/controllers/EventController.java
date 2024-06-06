@@ -2,8 +2,8 @@
 //
 //import com.calendar.components.EventRequestPostBuilder;
 //import com.calendar.components.EventRequestPutBuilder;
-//import com.calendar.data.EventPostRequest;
-//import com.calendar.data.EventPutRequest;
+//import com.calendar.requests.EventPostRequest;
+//import com.calendar.requests.EventPutRequest;
 //import com.calendar.data.EventResponse;
 //import com.calendar.exceptions.BadRequestException;
 //import com.calendar.exceptions.NotFoundException;

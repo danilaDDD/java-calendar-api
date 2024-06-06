@@ -1,4 +1,4 @@
-package com.calendar.data;
+package com.calendar.responses;
 
 import com.calendar.models.EventGroup;
 import lombok.Getter;

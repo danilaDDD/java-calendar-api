@@ -15,12 +15,12 @@ public class SimpleDateFormatter implements DateFormatter {
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     @Override
-    public LocalDateTime parseDateTime(String data) throws DateTimeParseException {
+    public LocalDateTime parseDateTime(String data) {
         return LocalDateTime.parse(data, dateTimeFormatter);
     }
 
     @Override
-    public LocalDate parseDate(String data) throws DateTimeParseException {
+    public LocalDate parseDate(String data) {
         return LocalDate.parse(data, dateFormatter);
     }
 

@@ -1,6 +1,6 @@
 package com.calendar.components;
 
-import com.calendar.data.EventPostRequest;
+import com.calendar.requests.EventPostRequest;
 import com.calendar.interfacies.RequestPostBuilder;
 import com.calendar.models.Event;
 

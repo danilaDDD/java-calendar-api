@@ -1,11 +1,10 @@
 package com.calendar.controllers;
 
-import com.calendar.data.DoneResponse;
+import com.calendar.responses.DoneResponse;
 import com.calendar.exceptions.AbstractRequestException;
 import com.calendar.exceptions.BadRequestException;
 import com.calendar.exceptions.GenerateJWTTokenException;
 import com.calendar.exceptions.NotFoundException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

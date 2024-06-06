@@ -23,7 +23,7 @@ public class User implements AuthEntity{
     private String login;
 
     @Column(columnDefinition = "TEXT")
-    private String encodedPassword;
+    @Setter @Getter String encodedPassword;
 
     @Column
     @Nullable
@@ -97,6 +97,8 @@ public class User implements AuthEntity{
     public void setEncodedPassword(String encodedPassword) {
         this.encodedPassword = encodedPassword;
     }
+
+
 
     public static enum Sex{
         MALE,

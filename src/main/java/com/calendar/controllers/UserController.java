@@ -1,9 +1,9 @@
 package com.calendar.controllers;
 
 import com.calendar.components.Secrets;
-import com.calendar.data.AuthRequest;
-import com.calendar.data.AuthResponse;
-import com.calendar.data.UserResponse;
+import com.calendar.requests.AuthRequest;
+import com.calendar.responses.AuthResponse;
+import com.calendar.responses.UserResponse;
 import com.calendar.exceptions.BadRequestException;
 import com.calendar.exceptions.GenerateJWTTokenException;
 import com.calendar.exceptions.NotFoundException;

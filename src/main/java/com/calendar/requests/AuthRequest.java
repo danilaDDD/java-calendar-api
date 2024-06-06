@@ -1,4 +1,4 @@
-package com.calendar.data;
+package com.calendar.requests;
 
 import lombok.Data;
 

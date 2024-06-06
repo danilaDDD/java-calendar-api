@@ -1,6 +1,6 @@
 package com.calendar.controllers;
 
-import com.calendar.data.EventGroupResponce;
+import com.calendar.responses.EventGroupResponce;
 import com.calendar.models.EventGroup;
 import com.calendar.services.EventGroupService;
 import org.springframework.beans.factory.annotation.Autowired;

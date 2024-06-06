@@ -1,8 +1,8 @@
 package com.calendar.controllers;
 
 import com.calendar.components.Secrets;
-import com.calendar.data.AuthRequest;
-import com.calendar.data.AuthResponse;
+import com.calendar.requests.AuthRequest;
+import com.calendar.responses.AuthResponse;
 import com.calendar.exceptions.GenerateJWTTokenException;
 import com.calendar.models.ApiClient;
 import com.calendar.components.JwtProvider;

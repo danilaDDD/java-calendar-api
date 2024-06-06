@@ -1,18 +1,10 @@
-package com.calendar.data;
+package com.calendar.responses;
 
-import com.calendar.interfacies.DateFormatter;
 import com.calendar.models.Event;
-import com.calendar.models.EventGroup;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
-import org.apache.commons.lang3.time.DateParser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
