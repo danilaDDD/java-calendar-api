@@ -2,25 +2,38 @@ package com.calendar.services;
 
 import com.calendar.models.ApiClient;
 import com.calendar.repositories.ApiClientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Repository;
+import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
-public class ApiClientService {
+@AllArgsConstructor
+public class ApiClientService implements AuthService<ApiClient>{
     private ApiClientRepository repository;
+    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public void setRepository(ApiClientRepository repository){
-        this.repository = repository;
+    @Override
+    public Optional<ApiClient> findByLoginAndPassword(String login, String password){
+        List<ApiClient> clients = repository.findAllByLoginAndActiveTrue(login);
+        return clients.stream()
+                .filter(apiClient -> passwordEncoder.matches(password, apiClient.getEncodedPassword())).findFirst();
+
     }
 
-    public ApiClient findByLoginAndPassword(String login, String password){
-        return repository.findApiClientByLoginAndPasswordAndActiveTrue(login, password);
+    @Override
+    public Optional<ApiClient> findByLoginAndEncodedPassword(String login, String encodedPassword) {
+        return repository.findApiClientByLoginAndEncodedPasswordAndActiveTrue(login, encodedPassword);
     }
 
-    public ApiClient findByLogin(String login){
-        return repository.findApiClientByLoginAndActiveTrue(login);
+    public ApiClient createApiClient(String login, String password, boolean active){
+        ApiClient apiClient = new ApiClient(login, passwordEncoder.encode(password), active);
+        return repository.save(apiClient);
+    }
+
+    public ApiClient createApiClient(String login, String password) {
+        return createApiClient(login, password, true);
     }
 }

@@ -8,4 +8,8 @@ public class UnauthorizedRequestException extends AbstractRequestException{
     public UnauthorizedRequestException() {
         super("Запрос не авторизован", HttpStatus.UNAUTHORIZED);
     }
+
+    public UnauthorizedRequestException(String message) {
+        super(message, HttpStatus.UNAUTHORIZED);
+    }
 }

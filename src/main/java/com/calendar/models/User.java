@@ -1,6 +1,5 @@
 package com.calendar.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,18 +13,17 @@ import java.util.Objects;
 @Accessors(chain = true)
 @Entity
 @Table(name = "users")
-@AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User implements AuthEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter private Long id;
 
     @Column
-    @Setter @Getter private String login;
+    private String login;
 
     @Column(columnDefinition = "TEXT")
-    @Setter @Getter private String password;
+    private String encodedPassword;
 
     @Column
     @Nullable
@@ -52,6 +50,7 @@ public class User {
     @Column(nullable = false, name = "admin")
     private boolean admin = false;
 
+
     public boolean isAdmin(){
         return admin;
     }
@@ -71,12 +70,32 @@ public class User {
     @Override
     public boolean equals(Object o) {
         User other = (User)o;
-        return other.login.equals(this.login);
+        return other.id.equals(other.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.login, this.password);
+        return Objects.hash(this.login, this.encodedPassword);
+    }
+
+    @Override
+    public String getLogin() {
+        return login;
+    }
+
+    @Override
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    @Override
+    public String getEncodedPassword() {
+        return encodedPassword;
+    }
+
+    @Override
+    public void setEncodedPassword(String encodedPassword) {
+        this.encodedPassword = encodedPassword;
     }
 
     public static enum Sex{

@@ -3,19 +3,14 @@ package com.calendar.services;
 import com.calendar.models.User;
 import com.calendar.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
     UserRepository repository;
     private PasswordEncoder passwordEncoder;
 
@@ -34,7 +29,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User findByLoginAndPassword(String login, String password){
-        return repository.findUserByLoginAndPassword(login, password);
+        return repository.findUserByLoginAndEncodedPassword(login, this.passwordEncoder.encode(password));
 
     }
 
@@ -43,6 +38,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User createUser(User user){
+        user.setEncodedPassword(passwordEncoder.encode(user.getEncodedPassword()));
         return repository.save(user);
     }
 
@@ -64,15 +60,5 @@ public class UserService implements UserDetailsService {
 
         return null;
 
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        User u = findUserByLogin(login);
-        if (Objects.isNull(u)) {
-            throw new UsernameNotFoundException(String.format("User %s is not found", login));
-        }
-        return new org.springframework.security.core.userdetails.User(u.getLogin(), u.getPassword(), true, true,
-                true, true, new HashSet<>());
     }
 }

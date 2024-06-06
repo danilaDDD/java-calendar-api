@@ -1,5 +1,6 @@
 package com.calendar.controllers;
 
+import com.calendar.components.Secrets;
 import com.calendar.data.AuthRequest;
 import com.calendar.data.AuthResponse;
 import com.calendar.data.UserResponse;
@@ -7,9 +8,10 @@ import com.calendar.exceptions.BadRequestException;
 import com.calendar.exceptions.GenerateJWTTokenException;
 import com.calendar.exceptions.NotFoundException;
 import com.calendar.models.User;
-import com.calendar.security.JwtProvider;
+import com.calendar.components.JwtProvider;
 import com.calendar.services.UserService;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,26 +23,20 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users/")
+@AllArgsConstructor
 public class UserController {
     private UserService userService;
 
     private JwtProvider jwtProvider;
 
-    @Autowired
-    public void setJwtProvider(JwtProvider provider){
-        jwtProvider = provider;
-    }
-    @Autowired
-    public void setUserService(UserService service){
-        userService = service;
-    }
+    private Secrets secrets;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "auth")
     public ResponseEntity<AuthResponse> auth(@RequestBody AuthRequest request){
         User user = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         if(user != null) {
-            String token = jwtProvider.generateUserToken(user.getLogin());
-            return new ResponseEntity<>(new AuthResponse(token, jwtProvider.getExpirationDays()), HttpStatus.OK);
+            String token = jwtProvider.generateUserToken(user);
+            return new ResponseEntity<>(new AuthResponse(token, secrets.getUserActualDays()), HttpStatus.OK);
 
         }else{
             throw new GenerateJWTTokenException();
