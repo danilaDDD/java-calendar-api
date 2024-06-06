@@ -9,7 +9,6 @@ import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -17,14 +16,7 @@ import java.util.Date;
 @Component
 @Log
 public class JwtProvider {
-
-    private UserService userService;
     private Secrets secrets;
-
-    @Autowired
-    public void setUserService(UserService userService){
-        this.userService = userService;
-    }
 
     @Autowired
     public void setSecrets(Secrets secrets) {

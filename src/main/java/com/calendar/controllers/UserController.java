@@ -62,7 +62,7 @@ public class UserController {
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.GET)
     public ResponseEntity<UserResponse> findById(
-            @PathVariable(name = "id", required = true) Long id
+            @PathVariable(name = "id") Long id
     ){
         User user = userService.findById(id);
         if (user != null){
@@ -73,7 +73,7 @@ public class UserController {
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.DELETE)
     public ResponseEntity<UserResponse> deleteUser(
-            @PathVariable(name = "id", required = true)Long id
+            @PathVariable(name = "id")Long id
     ){
         User user = userService.deleteById(id);
         if(user != null){
