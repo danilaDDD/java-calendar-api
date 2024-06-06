@@ -47,10 +47,6 @@ public class UserService {
 
     }
 
-    public User findUserByLogin(String login){
-        return repository.findUserByLogin(login);
-    }
-
     public User deleteById(Long id){
         User user = findById(id);
         if (user != null) {

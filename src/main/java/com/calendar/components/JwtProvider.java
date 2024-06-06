@@ -14,8 +14,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
-import static io.jsonwebtoken.lang.Strings.hasText;
-
 @Component
 @Log
 public class JwtProvider {
@@ -39,11 +37,6 @@ public class JwtProvider {
 
     public String generateUserToken(AuthEntity entity){
         return generateTokenByEntity(entity, secrets.getUserSecret(), secrets.getUserActualDays());
-    }
-
-    private int getActualDays(Duration duration){
-        int days = (int) (duration.getSeconds() / 1440);
-        return Math.max(days, 1);
     }
 
     public String generateTokenByEntity(AuthEntity entity, String secret, int actualDays){

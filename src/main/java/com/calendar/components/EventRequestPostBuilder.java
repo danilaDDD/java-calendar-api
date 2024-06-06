@@ -4,13 +4,9 @@ import com.calendar.data.EventPostRequest;
 import com.calendar.interfacies.RequestPostBuilder;
 import com.calendar.models.Event;
 
-import com.calendar.models.EventGroup;
 import com.calendar.models.User;
-import com.calendar.services.EventGroupService;
-import com.calendar.services.UserService;
 import com.calendar.interfacies.DateFormatter;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component

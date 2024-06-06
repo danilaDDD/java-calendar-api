@@ -1,11 +1,8 @@
 package com.calendar.components;
 
-import com.calendar.models.ApiClient;
 import com.calendar.services.ApiClientService;
-import lombok.AllArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 
 import java.util.Scanner;
 

@@ -3,9 +3,6 @@ package com.calendar.models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -31,7 +28,7 @@ public class ApiClient implements AuthEntity {
     private LocalDateTime created;
 
     @Column(nullable = false)
-    private LocalDateTime updated;;
+    private LocalDateTime updated;
 
     @Setter
     @Column(nullable = false)
@@ -43,10 +40,6 @@ public class ApiClient implements AuthEntity {
         this.active = active;
         this.created = LocalDateTime.now();
         this.updated = LocalDateTime.now();
-    }
-
-    public ApiClient(String login, String encodedPassword) {
-        this(login, encodedPassword, true);
     }
 
     @Override
