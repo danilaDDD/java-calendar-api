@@ -4,13 +4,13 @@
 //import com.calendar.components.EventRequestPutBuilder;
 //import com.calendar.requests.EventPostRequest;
 //import com.calendar.requests.EventPutRequest;
-//import com.calendar.data.EventResponse;
 //import com.calendar.exceptions.BadRequestException;
 //import com.calendar.exceptions.NotFoundException;
 //import com.calendar.interfacies.DateFormatter;
 //import com.calendar.models.Event;
 //import com.calendar.models.User;
 //import com.calendar.components.JwtProvider;
+//import com.calendar.responses.EventResponse;
 //import com.calendar.services.EventService;
 //import com.calendar.services.UserService;
 //import io.swagger.annotations.Api;
@@ -18,7 +18,6 @@
 //import io.swagger.annotations.ApiResponse;
 //import io.swagger.annotations.ApiResponses;
 //import lombok.AllArgsConstructor;
-//import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.HttpStatus;
 //import org.springframework.http.MediaType;
 //import org.springframework.http.ResponseEntity;

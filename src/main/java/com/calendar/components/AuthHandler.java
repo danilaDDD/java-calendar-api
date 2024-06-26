@@ -36,6 +36,9 @@ public class AuthHandler<T extends AuthEntity> {
 
     private String getBearerToken(HttpServletRequest request){
         String token = request.getHeader("Authorization");
+        if(token == null)
+            throw new UnauthorizedRequestException("bearer token not founded");
+
         String prefix = "Bearer ";
         int prefixIndex = token.indexOf(prefix);
 
