@@ -43,10 +43,6 @@ public class Event implements Serializable {
     @JoinColumn(nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = true)
-    private EventGroup group;
-
     @Override
     public String toString(){
         return getName() + " " + getCreated().toString();

@@ -24,7 +24,6 @@ public class FiltersConfig {
         FilterRegistrationBean<CheckUserTokenFilter> registrationBean = new FilterRegistrationBean<>();
 
         registrationBean.setFilter(checkUserTokenFilter);
-        registrationBean.addUrlPatterns("/event-groups/*");
         registrationBean.addUrlPatterns("/events/*");
 
         return registrationBean;
