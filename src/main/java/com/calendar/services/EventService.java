@@ -3,6 +3,7 @@ package com.calendar.services;
 import com.calendar.models.Event;
 import com.calendar.models.User;
 import com.calendar.repositories.EventRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +14,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class EventService {
-    @Autowired
     EventRepository repository;
 
     public List<Event> findAll(){

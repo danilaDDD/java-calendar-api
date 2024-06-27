@@ -14,8 +14,6 @@ import com.calendar.services.EventService;
 import com.calendar.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,7 +44,6 @@ public class EventController {
     @ApiOperation(
             value = "Получить все события",
             httpMethod = "GET",
-            produces = "",
             response = Json.class
     )
     public List<EventResponse> findAll(
@@ -67,11 +64,10 @@ public class EventController {
     @ApiOperation(
             value = "Получить событие по id",
             httpMethod = "GET",
-            produces = "",
             response = Json.class
     )
     public ResponseEntity<EventResponse> findById(
-            @PathVariable(name = "id", required = true) Long id
+            @PathVariable(name = "id") Long id
     ){
         Event event = eventService.findById(id);
         if(event != null)
@@ -84,7 +80,6 @@ public class EventController {
     @ApiOperation(
             value = "Получить список всех допустимых статусов событий",
             httpMethod = "GET",
-            produces = "",
             response = Json.class
     )
     public List<Event.EventStatus> status(){
@@ -96,7 +91,6 @@ public class EventController {
     @ApiOperation(
             value = "Обновление существующего событие по id",
             httpMethod = "PUT",
-            produces = "",
             response = Json.class
     )
     public ResponseEntity<EventResponse> putEvent(
@@ -118,7 +112,6 @@ public class EventController {
     @ApiOperation(
             value = "Сохранение нового события",
             httpMethod = "POST",
-            produces = "",
             response = Json.class
     )
     public ResponseEntity<EventResponse> postEvent(
@@ -145,7 +138,6 @@ public class EventController {
     @ApiOperation(
             value = "Удаление существующего события по id",
             httpMethod = "GET",
-            produces = "",
             response = Json.class
     )
     public ResponseEntity<EventResponse> deleteEvent(@PathVariable(name = "id") Long id){
