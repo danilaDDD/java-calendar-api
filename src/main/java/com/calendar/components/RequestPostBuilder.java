@@ -1,4 +1,4 @@
-package com.calendar.interfacies;
+package com.calendar.components;
 
 import com.calendar.models.User;
 

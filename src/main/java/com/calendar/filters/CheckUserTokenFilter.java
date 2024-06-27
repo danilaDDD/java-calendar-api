@@ -35,8 +35,9 @@ public class CheckUserTokenFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         try {
-            authHandler.getAuthEntityOrThrowException(request,
+            User user = authHandler.getAuthEntityOrThrowException(request,
                     this.userService, this.secrets.getUserSecret());
+            request.setAttribute("userId", user.getId());
 
         } catch (UnauthorizedRequestException e) {
             response = FiltersUtils.createRejectResponse(response);

@@ -21,8 +21,8 @@ public class EventService {
         return repository.findAll();
     }
 
-    public List<Event> findByUser(User user){
-        return repository.findEventsByUser(user);
+    public List<Event> findByUserId(Long userId){
+        return repository.findEventsByUserId(userId);
     }
 
     public List<Event> findByUserAndStatus(User user, Event.EventStatus status){

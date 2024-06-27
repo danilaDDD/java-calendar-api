@@ -10,9 +10,18 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Setter
 public class EventResponse implements Serializable {
-    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
-    Integer id;
+    public EventResponse(Event event) {
+        id = event.getId();
+        name = event.getName();
+        comment = event.getComment();
+        status = event.getStatus();
+        played = formatter.format(event.getPlayed());
+        user = event.getUser().getLogin();
+    }
+
+    long id;
     String name;
     String comment;
     Event.EventStatus status;

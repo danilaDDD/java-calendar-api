@@ -2,15 +2,15 @@ package com.calendar.configs;
 
 
 import com.calendar.components.SimpleDateFormatter;
-import com.calendar.interfacies.DateFormatter;
+import com.calendar.components.DateFormatter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class CustomeConfigsManager {
+public class CustomConfigsManager {
 
     @Bean
-    public DateFormatter dateParser(){
+    public DateFormatter dateFormatter(){
         return new SimpleDateFormatter();
     }
 }

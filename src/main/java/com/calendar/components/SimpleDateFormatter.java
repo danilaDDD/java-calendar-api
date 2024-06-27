@@ -1,12 +1,10 @@
 package com.calendar.components;
 
-import com.calendar.interfacies.DateFormatter;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 
 @Component
 public class SimpleDateFormatter implements DateFormatter {
