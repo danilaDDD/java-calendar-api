@@ -1,5 +1,6 @@
 package com.calendar.controllers;
 
+import com.calendar.components.AuthUtils;
 import com.calendar.components.EventRequestPostBuilder;
 import com.calendar.components.EventRequestPutBuilder;
 import com.calendar.components.EventsGetResponseFilter;
@@ -38,6 +39,7 @@ public class EventController {
     private EventRequestPostBuilder eventRequestPostBuilder;
     private EventRequestPutBuilder eventRequestPutBuilder;
     private EventsGetResponseFilter getResponseFilter;
+    private AuthUtils authUtils;
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -54,7 +56,7 @@ public class EventController {
     )
 
     {
-        long userId = (long) request.getAttribute("userId");
+        long userId = authUtils.getUserId(request);
         List<Event> events = getResponseFilter.filter(status, fromDateString,
                 toDateString, userId);
         return serialize(events);
@@ -67,9 +69,11 @@ public class EventController {
             response = Json.class
     )
     public ResponseEntity<EventResponse> findById(
-            @PathVariable(name = "id") Long id
+            @PathVariable(name = "id") Long id,
+            HttpServletRequest request
     ){
-        Event event = eventService.findById(id);
+        long userId = authUtils.getUserId(request);
+        Event event = eventService.findByIdAndUserId(id, userId);
         if(event != null)
             return new ResponseEntity<>(serialize(eventService.findById(id)), HttpStatus.OK);
         else
@@ -95,13 +99,14 @@ public class EventController {
     )
     public ResponseEntity<EventResponse> putEvent(
             @PathVariable(name="id") Long id,
-            @Valid @RequestBody EventPutRequest requestBody
+            @Valid @RequestBody EventPutRequest requestBody,
+            HttpServletRequest request
             )
     {
-
+        long userId = authUtils.getUserId(request);
         Event event = eventRequestPutBuilder.build(id, requestBody);
         if(event != null) {
-            Event updatedEvent = eventService.update(id, event);
+            Event updatedEvent = eventService.update(id, event, userId);
             return new ResponseEntity<>(new EventResponse(updatedEvent), HttpStatus.OK);
         }else
             throw new NotFoundException("Нет событий с таким id");
@@ -118,8 +123,8 @@ public class EventController {
             @Valid @RequestBody EventPostRequest requestBody,
             HttpServletRequest request
             ){
-
-        User user = userService.getUserFromRequest(request);
+        long userId = authUtils.getUserId(request);
+        User user = userService.findById(userId);
 
         Event event = eventRequestPostBuilder.build(requestBody, user);
         if(event != null) {
@@ -140,8 +145,12 @@ public class EventController {
             httpMethod = "GET",
             response = Json.class
     )
-    public ResponseEntity<EventResponse> deleteEvent(@PathVariable(name = "id") Long id){
-        Event deletedEvent = eventService.delete(id);
+    public ResponseEntity<EventResponse> deleteEvent(
+            @PathVariable(name = "id") Long id,
+            HttpServletRequest request
+    ){
+        long userId = authUtils.getUserId(request);
+        Event deletedEvent = eventService.delete(id, userId);
         if(deletedEvent != null)
             return new ResponseEntity<>(new EventResponse(deletedEvent), HttpStatus.OK);
         else

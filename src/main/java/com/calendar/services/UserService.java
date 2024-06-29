@@ -2,7 +2,6 @@ package com.calendar.services;
 
 import com.calendar.exceptions.BadRequestException;
 import com.calendar.exceptions.NotFoundException;
-import com.calendar.exceptions.UnauthorizedRequestException;
 import com.calendar.models.User;
 import com.calendar.repositories.UserRepository;
 import com.calendar.requests.UserPostRequest;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -86,14 +84,5 @@ public class UserService implements AuthService<User>{
         return users.stream()
                 .filter(user -> passwordEncoder.matches(password, user.getEncodedPassword())).findFirst();
 
-    }
-
-    public User getUserFromRequest(HttpServletRequest request) {
-        Object value = request.getAttribute("userId");
-        if(value == null)
-            throw new UnauthorizedRequestException("not auth request by user");
-
-        long userId = (long) value;
-        return findById(userId);
     }
 }
