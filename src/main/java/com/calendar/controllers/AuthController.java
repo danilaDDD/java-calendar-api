@@ -8,16 +8,20 @@ import com.calendar.models.ApiClient;
 import com.calendar.components.JwtProvider;
 import com.calendar.services.ApiClientService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.validation.Valid;
 import java.util.Optional;
 
 
 @RestController
+@Api(value = "get-token/", tags = {"Генерация первичного токена авторизации"})
 @AllArgsConstructor
 public class AuthController {
     private ApiClientService apiClientService;
@@ -25,6 +29,11 @@ public class AuthController {
     private Secrets secrets;
 
     @PostMapping("/get-token/")
+    @ApiOperation(
+            value = "Генерация первичного токена авторизации",
+            httpMethod = "GET",
+            response = Json.class
+    )
     public ResponseEntity<AuthResponse> getToken(@Valid @RequestBody AuthRequest request) {
         Optional<ApiClient> clientOptional = apiClientService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         if(clientOptional.isPresent()) {

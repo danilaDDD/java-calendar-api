@@ -11,6 +11,8 @@ import com.calendar.models.User;
 import com.calendar.components.JwtProvider;
 import com.calendar.services.UserService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users/")
+@Api(value = "users/", tags = {"Пользователи"})
 @AllArgsConstructor
 public class UserController {
     private UserService userService;
@@ -33,6 +36,11 @@ public class UserController {
     private Secrets secrets;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "auth")
+    @ApiOperation(
+            value = "Генерация токена авторизации по пользователю",
+            httpMethod = "GET",
+            response = AuthResponse.class
+    )
     public ResponseEntity<AuthResponse> auth(@Valid @RequestBody AuthRequest request){
         Optional<User> userOptional = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         if(userOptional.isPresent()) {
@@ -45,6 +53,11 @@ public class UserController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(
+            value = "Получение всех пользователей",
+            httpMethod = "GET",
+            response = UserResponse.class
+    )
     public List<UserResponse> findAll(){
 
         return userService.findAll().stream()
@@ -52,12 +65,22 @@ public class UserController {
     }
     // FIXME: API cannot create users with equal logins
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(
+            value = "Созданеие пользователя",
+            httpMethod = "POST",
+            response = UserResponse.class
+    )
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserPostRequest userPostRequest){
             User savedUser = userService.createUser(userPostRequest);
             return new ResponseEntity<>(new UserResponse(savedUser), HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.GET)
+    @ApiOperation(
+            value = "Получение пользователя по ID",
+            httpMethod = "GET",
+            response = UserResponse.class
+    )
     public ResponseEntity<UserResponse> findById(
             @PathVariable(name = "id") Long id
     ){
@@ -69,6 +92,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.DELETE)
+    @ApiOperation(
+            value = "Удаление пользователя по ID",
+            httpMethod = "GET",
+            response = UserResponse.class
+    )
     public ResponseEntity<UserResponse> deleteUser(
             @PathVariable(name = "id")Long id
     ){

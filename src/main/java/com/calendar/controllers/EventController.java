@@ -15,6 +15,7 @@ import com.calendar.services.EventService;
 import com.calendar.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/events/")
-@Api(value = "events/", tags = {"Управление событиями"})
+@Api(value = "events/", tags = {"События"})
 @AllArgsConstructor
 public class EventController {
     private EventService eventService;
@@ -41,17 +42,23 @@ public class EventController {
     private EventsGetResponseFilter getResponseFilter;
     private AuthUtils authUtils;
 
-
+    //@FIXME сделать отдельные классы запросов списков объектов
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Получить все события",
             httpMethod = "GET",
-            response = Json.class
+            response = EventResponse.class
     )
     public List<EventResponse> findAll(
+            @ApiParam(name = "Статус события", value = "Статус события", example = "ENABLE")
             @RequestParam(name = "status", required = false) String status,
+
+            @ApiParam(name="Дата начиная с" , value = "Дата и время", example = "01-12-1996 00:12")
             @RequestParam(name = "from", required = false) String fromDateString,
+
+            @ApiParam(name="Дата до" , value = "Дата и время", example = "01-12-1996 00:12")
             @RequestParam(name = "to", required = false) String toDateString,
+
             HttpServletRequest request
     )
 
@@ -64,11 +71,12 @@ public class EventController {
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.GET)
     @ApiOperation(
-            value = "Получить событие по id",
+            value = "Получить событие по ID",
             httpMethod = "GET",
-            response = Json.class
+            response = EventResponse.class
     )
     public ResponseEntity<EventResponse> findById(
+            @ApiParam(value = "Идентификатор события")
             @PathVariable(name = "id") Long id,
             HttpServletRequest request
     ){
@@ -84,7 +92,7 @@ public class EventController {
     @ApiOperation(
             value = "Получить список всех допустимых статусов событий",
             httpMethod = "GET",
-            response = Json.class
+            response = EventResponse.class
     )
     public List<Event.EventStatus> status(){
         return Arrays.stream(Event.EventStatus.values())
@@ -95,9 +103,10 @@ public class EventController {
     @ApiOperation(
             value = "Обновление существующего событие по id",
             httpMethod = "PUT",
-            response = Json.class
+            response = EventResponse.class
     )
     public ResponseEntity<EventResponse> putEvent(
+            @ApiParam(value = "Идентификатор события")
             @PathVariable(name="id") Long id,
             @Valid @RequestBody EventPutRequest requestBody,
             HttpServletRequest request
@@ -117,7 +126,7 @@ public class EventController {
     @ApiOperation(
             value = "Сохранение нового события",
             httpMethod = "POST",
-            response = Json.class
+            response = EventResponse.class
     )
     public ResponseEntity<EventResponse> postEvent(
             @Valid @RequestBody EventPostRequest requestBody,
@@ -143,9 +152,10 @@ public class EventController {
     @ApiOperation(
             value = "Удаление существующего события по id",
             httpMethod = "GET",
-            response = Json.class
+            response = EventResponse.class
     )
     public ResponseEntity<EventResponse> deleteEvent(
+            @ApiParam(value = "Идентификатор события")
             @PathVariable(name = "id") Long id,
             HttpServletRequest request
     ){
