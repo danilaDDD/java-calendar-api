@@ -3,3 +3,4 @@
 /.mvn/
 /build/
 api-calendar.log
+.env

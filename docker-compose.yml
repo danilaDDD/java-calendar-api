@@ -1,32 +1,31 @@
+version: '3.8'
 
 services:
-  postgres:
-    build:
-      context: services/postgres
-      dockerfile: Dockerfile.development
-    ports:
-      - "5433:5432"
-    environment:
-      - POSTGRES_USER=calendar
-      - POSTGRES_DB=new_calendar
-      - POSTGRES_PASSWORD=float123
-    volumes:
-      - "db-data:/var/lib/postgresql/data"
-
-
   app:
-    build:
-      context: services/app
-      dockerfile: Dockerfile.development
-    environment:
-      - PORT=8091
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres/new_calendar
-#      - JS_URL=http://localhost
-    image: 'calendar'
+    build: .
     ports:
-      - 8091:8091
+      - "${OUT_PORT}:8080"
+    env_file:
+      - .env
+    environment:
+      - OUT_PORT=${OUT_PORT}
+      - PROFILE=${PROFILE}
+      - DB_URL=${DB_URL}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
     depends_on:
-      - postgres
+      - db
+
+  db:
+    image: postgres:14
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  db-data:
+  postgres_data:
