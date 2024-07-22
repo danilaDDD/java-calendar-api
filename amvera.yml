@@ -1,13 +1,8 @@
-meta:
-  environment: jvm
-  toolchain:
-    name: gradle
-    version: "11"
 build:
-  artifacts:
-    build/libs/dannk-api-calendar.jar: /
-  args: --stacktrace
+  gradle:
+    version: 7.0
+    task: build
+
 run:
   jarName: dannk-api-calendar.jar
-  persistenceMount: /data
-  containerPort: "80"
+  javaVersion: 11
