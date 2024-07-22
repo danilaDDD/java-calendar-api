@@ -1,4 +1,4 @@
-FROM gradle:7.0.0-jdk11
+FROM gradle:7.0.0
 WORKDIR /app
 COPY build.gradle settings.gradle ./
 COPY src ./src
