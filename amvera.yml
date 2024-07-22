@@ -1,11 +1,12 @@
 meta:
-  #  окружение для сборки с использованием docker
-  environment: docker
+  environment: jvm
   toolchain:
-    name: docker
+    name: gradle
+    version: "11"
 build:
-  #  путь к Dockerfile без /
-  dockerfile: Dockerfile
+  artifacts:
+    build/libs/dannk-api-calendar.jar: /
 run:
-  #  порт, который слушает наше приложение
-  containerPort: 8080
+  jarName: dannk-api-calendar.jar
+  persistenceMount: /data
+  containerPort: "80"
