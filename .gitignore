@@ -4,3 +4,4 @@
 /build/
 api-calendar.log
 .env
+src/main/resources/application-local.properties

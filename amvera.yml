@@ -1,8 +1,0 @@
-build:
-  gradle:
-    version: 7.0
-    task: build
-
-run:
-  jarName: dannk-api-calendar.jar
-  javaVersion: 11
