@@ -8,5 +8,5 @@ RUN gradle build --no-daemon
 # Этап выполнения
 FROM openjdk:11-jdk-slim
 WORKDIR /app
-COPY ./build/libs/dannk-api-calendar.jar app.jar
+COPY --from=build /app/build/libs/dannk-api-calendar.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
