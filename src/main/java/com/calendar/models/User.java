@@ -7,14 +7,15 @@ import lombok.experimental.Accessors;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 @Accessors(chain = true)
-@Entity
+@javax.persistence.Entity
 @Table(name = "users")
 @NoArgsConstructor
-public class User implements AuthEntity{
+public class User extends BaseEntity implements AuthEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter private Long id;
@@ -46,6 +47,12 @@ public class User implements AuthEntity{
 
     @Column(nullable = false)
     @Getter @Setter private Role role = Role.USER;
+
+    @Column(nullable = false)
+    @Getter private LocalDateTime created = LocalDateTime.now();
+
+    @Column(nullable = false)
+    @Getter private LocalDateTime updated = LocalDateTime.now();
 
     public User(String login, String encodedPassword) {
         this.login = login;

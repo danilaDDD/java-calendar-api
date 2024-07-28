@@ -1,28 +1,26 @@
 package com.calendar.controllers;
 
 import com.calendar.components.Secrets;
-import com.calendar.requests.AuthRequest;
-import com.calendar.requests.UserPostRequest;
+import com.calendar.mapper.requestmapper.UserPostRequestMapper;
+import com.calendar.mapper.responsemapper.UserResponseMapper;
+import com.calendar.requests.AuthRequestBody;
+import com.calendar.requests.UserPostRequestBody;
 import com.calendar.responses.AuthResponse;
 import com.calendar.responses.UserResponse;
 import com.calendar.exceptions.GenerateJWTTokenException;
-import com.calendar.exceptions.NotFoundException;
 import com.calendar.models.User;
 import com.calendar.components.JwtProvider;
+import com.calendar.responses.UsersResponse;
 import com.calendar.services.UserService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users/")
@@ -30,6 +28,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserController {
     private UserService userService;
+    private UserResponseMapper userResponseMapper;
+    private UserPostRequestMapper userPostRequestMapper;
 
     private JwtProvider jwtProvider;
 
@@ -38,14 +38,14 @@ public class UserController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "auth")
     @ApiOperation(
             value = "Генерация токена авторизации по пользователю",
-            httpMethod = "GET",
+            httpMethod = "POST",
             response = AuthResponse.class
     )
-    public ResponseEntity<AuthResponse> auth(@Valid @RequestBody AuthRequest request){
+    public AuthResponse auth(@Valid @RequestBody AuthRequestBody request){
         Optional<User> userOptional = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         if(userOptional.isPresent()) {
             String token = jwtProvider.generateUserToken(userOptional.get());
-            return new ResponseEntity<>(new AuthResponse(token, secrets.getUserActualDays()), HttpStatus.OK);
+            return new AuthResponse(token, secrets.getUserActualDays());
 
         }else{
             throw new GenerateJWTTokenException();
@@ -56,23 +56,22 @@ public class UserController {
     @ApiOperation(
             value = "Получение всех пользователей",
             httpMethod = "GET",
-            response = UserResponse.class
+            response = UsersResponse.class
     )
-    public List<UserResponse> findAll(){
-
-        return userService.findAll().stream()
-                .map(UserResponse::new).collect(Collectors.toList());
+    public UsersResponse findAll(){
+        return userResponseMapper.entitiesToResponse(userService.findAll());
     }
-    // FIXME: API cannot create users with equal logins
+
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
-            value = "Созданеие пользователя",
+            value = "Создание пользователя",
             httpMethod = "POST",
             response = UserResponse.class
     )
-    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserPostRequest userPostRequest){
-            User savedUser = userService.createUser(userPostRequest);
-            return new ResponseEntity<>(new UserResponse(savedUser), HttpStatus.ACCEPTED);
+    public UserResponse createUser(@Valid @RequestBody UserPostRequestBody userPostRequestBody){
+            User unsavedUser = userPostRequestMapper.entityFromRequestBody(userPostRequestBody);
+            User savedUser = userService.createUser(unsavedUser);
+            return userResponseMapper.entityToResponse(savedUser);
     }
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.GET)
@@ -81,14 +80,11 @@ public class UserController {
             httpMethod = "GET",
             response = UserResponse.class
     )
-    public ResponseEntity<UserResponse> findById(
+    public UserResponse findById(
             @PathVariable(name = "id") Long id
     ){
         User user = userService.findById(id);
-        if (user != null){
-            return new ResponseEntity<>(new UserResponse(user), HttpStatus.OK);
-        }else
-            throw new NotFoundException("Нет пользователя с данным id");
+        return userResponseMapper.entityToResponse(user);
     }
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.DELETE)
@@ -97,13 +93,10 @@ public class UserController {
             httpMethod = "GET",
             response = UserResponse.class
     )
-    public ResponseEntity<UserResponse> deleteUser(
+    public UserResponse deleteUser(
             @PathVariable(name = "id")Long id
     ){
         User user = userService.deleteById(id);
-        if(user != null){
-            return new ResponseEntity<>(new UserResponse(user), HttpStatus.OK);
-        }else
-            throw new NotFoundException("Нет пользователя с таким id");
+        return userResponseMapper.entityToResponse(user);
     }
 }

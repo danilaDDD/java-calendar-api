@@ -1,27 +1,25 @@
 package com.calendar.controllers;
 
 import com.calendar.components.AuthUtils;
-import com.calendar.components.EventRequestPostBuilder;
 import com.calendar.components.EventRequestPutBuilder;
 import com.calendar.components.EventsGetResponseFilter;
-import com.calendar.requests.EventPostRequest;
-import com.calendar.requests.EventPutRequest;
-import com.calendar.exceptions.BadRequestException;
-import com.calendar.exceptions.NotFoundException;
+import com.calendar.mapper.requestmapper.EventPostRequestMapper;
+import com.calendar.mapper.requestmapper.EventPutRequestMapper;
+import com.calendar.mapper.responsemapper.EventResponseMapper;
+import com.calendar.requests.EventPostRequestBody;
+import com.calendar.requests.EventPutRequestBody;
 import com.calendar.models.Event;
 import com.calendar.models.User;
 import com.calendar.responses.EventResponse;
+import com.calendar.responses.EventsResponse;
 import com.calendar.services.EventService;
 import com.calendar.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -36,9 +34,10 @@ import java.util.stream.Collectors;
 public class EventController {
     private EventService eventService;
     private UserService userService;
+    private EventResponseMapper eventResponseMapper;
 
-    private EventRequestPostBuilder eventRequestPostBuilder;
-    private EventRequestPutBuilder eventRequestPutBuilder;
+    private EventPostRequestMapper eventPostRequestMapper;
+    private EventPutRequestMapper eventPutRequestMapper;
     private EventsGetResponseFilter getResponseFilter;
     private AuthUtils authUtils;
 
@@ -47,9 +46,9 @@ public class EventController {
     @ApiOperation(
             value = "Получить все события",
             httpMethod = "GET",
-            response = EventResponse.class
+            response = EventsResponse.class
     )
-    public List<EventResponse> findAll(
+    public EventsResponse findAll(
             @ApiParam(name = "Статус события", value = "Статус события", example = "ENABLE")
             @RequestParam(name = "status", required = false) String status,
 
@@ -66,7 +65,7 @@ public class EventController {
         long userId = authUtils.getUserId(request);
         List<Event> events = getResponseFilter.filter(status, fromDateString,
                 toDateString, userId);
-        return serialize(events);
+        return eventResponseMapper.entitiesToResponse(events);
     }
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.GET)
@@ -75,17 +74,13 @@ public class EventController {
             httpMethod = "GET",
             response = EventResponse.class
     )
-    public ResponseEntity<EventResponse> findById(
-            @ApiParam(value = "Идентификатор события")
+    public EventResponse findById(
             @PathVariable(name = "id") Long id,
             HttpServletRequest request
     ){
         long userId = authUtils.getUserId(request);
         Event event = eventService.findByIdAndUserId(id, userId);
-        if(event != null)
-            return new ResponseEntity<>(serialize(eventService.findById(id)), HttpStatus.OK);
-        else
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return eventResponseMapper.entityToResponse(event);
     }
 
     @RequestMapping(value = "/status/", method = RequestMethod.GET)
@@ -105,21 +100,17 @@ public class EventController {
             httpMethod = "PUT",
             response = EventResponse.class
     )
-    public ResponseEntity<EventResponse> putEvent(
-            @ApiParam(value = "Идентификатор события")
+    public EventResponse putEvent(
             @PathVariable(name="id") Long id,
-            @Valid @RequestBody EventPutRequest requestBody,
+            @Valid @RequestBody EventPutRequestBody requestBody,
             HttpServletRequest request
             )
     {
         long userId = authUtils.getUserId(request);
-        Event event = eventRequestPutBuilder.build(id, requestBody);
-        if(event != null) {
-            Event updatedEvent = eventService.update(id, event, userId);
-            return new ResponseEntity<>(new EventResponse(updatedEvent), HttpStatus.OK);
-        }else
-            throw new NotFoundException("Нет событий с таким id");
-
+        Event existEvent = eventService.findById(id);
+        Event event = eventPutRequestMapper.update(existEvent, requestBody);
+        Event updatedEvent = eventService.update(id, event, userId);
+        return eventResponseMapper.entityToResponse(updatedEvent);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -128,24 +119,16 @@ public class EventController {
             httpMethod = "POST",
             response = EventResponse.class
     )
-    public ResponseEntity<EventResponse> postEvent(
-            @Valid @RequestBody EventPostRequest requestBody,
+    public EventResponse postEvent(
+            @Valid @RequestBody EventPostRequestBody requestBody,
             HttpServletRequest request
             ){
         long userId = authUtils.getUserId(request);
         User user = userService.findById(userId);
 
-        Event event = eventRequestPostBuilder.build(requestBody, user);
-        if(event != null) {
-            Event savedEvent = eventService.save(event);
-            if(savedEvent != null)
-                return new ResponseEntity<>(new EventResponse(savedEvent), HttpStatus.CREATED);
-        }else
-            throw new NotFoundException("Нет события с таким id");
-
-
-
-        throw new BadRequestException();
+        Event event = eventPostRequestMapper.entityFromRequestBody(requestBody, user);
+        Event savedEvent = eventService.save(event);
+        return eventResponseMapper.entityToResponse(savedEvent);
     }
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.DELETE)
@@ -154,26 +137,12 @@ public class EventController {
             httpMethod = "GET",
             response = EventResponse.class
     )
-    public ResponseEntity<EventResponse> deleteEvent(
-            @ApiParam(value = "Идентификатор события")
+    public EventResponse deleteEvent(
             @PathVariable(name = "id") Long id,
             HttpServletRequest request
     ){
         long userId = authUtils.getUserId(request);
         Event deletedEvent = eventService.delete(id, userId);
-        if(deletedEvent != null)
-            return new ResponseEntity<>(new EventResponse(deletedEvent), HttpStatus.OK);
-        else
-            throw new NotFoundException();
+        return eventResponseMapper.entityToResponse(deletedEvent);
     }
-
-    public List<EventResponse> serialize(List<Event> events){
-        return events.stream().map(EventResponse::new).collect(Collectors.toList());
-    }
-
-    private EventResponse serialize(Event event){
-            return new EventResponse(event);
-    }
-
-
 }
