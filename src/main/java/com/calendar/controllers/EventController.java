@@ -1,7 +1,6 @@
 package com.calendar.controllers;
 
 import com.calendar.components.AuthUtils;
-import com.calendar.components.EventRequestPutBuilder;
 import com.calendar.components.EventsGetResponseFilter;
 import com.calendar.mapper.requestmapper.EventPostRequestMapper;
 import com.calendar.mapper.requestmapper.EventPutRequestMapper;
