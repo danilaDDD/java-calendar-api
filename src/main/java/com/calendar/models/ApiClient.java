@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "api_clients")
 @Getter
 @NoArgsConstructor
-public class ApiClient implements AuthEntity {
+public class ApiClient extends BaseEntity implements AuthEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

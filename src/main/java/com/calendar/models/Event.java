@@ -12,7 +12,7 @@ import java.util.Objects;
 @Table(name = "events")
 @Setter
 @Getter
-public class Event implements Serializable {
+public class Event extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter private Long id;

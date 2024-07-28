@@ -8,7 +8,7 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class UserPostRequest {
+public class UserPostRequestBody implements UserRequestBody {
     @NotNull
     String login;
     @NotNull
@@ -27,16 +27,8 @@ public class UserPostRequest {
 
     @Nullable
     @Enumerated(EnumType.STRING)
-    private User.Sex sex = null;
+    private User.Sex sex;
 
     @Nullable
-    private User.Role role = null;
-
-    public User.Role getRoleOrDefault(){
-        return role == null ? User.Role.USER: role;
-    }
-
-    public User.Sex getSexOrDefault(){
-        return sex == null ? User.Sex.UNKNOWN: sex;
-    }
+    private User.Role role;
 }

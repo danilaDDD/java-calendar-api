@@ -1,10 +1,10 @@
-package com.calendar.components;
+package com.calendar.mapper.requestmapper;
 
+import com.calendar.components.DateFormatter;
 import com.calendar.exceptions.BadRequestException;
-import com.calendar.requests.EventPostRequest;
 import com.calendar.models.Event;
-
 import com.calendar.models.User;
+import com.calendar.requests.EventRequestBody;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +12,11 @@ import java.time.format.DateTimeParseException;
 
 @Component
 @AllArgsConstructor
-public class EventRequestPostBuilder implements RequestPostBuilder<Event, EventPostRequest> {
-    private DateFormatter dateFormatter;
+public class EventPostRequestMapper implements RequestEntityWithUserMapper<Event, EventRequestBody> {
+    DateFormatter dateFormatter;
 
     @Override
-    public Event build(EventPostRequest request, User user) {
+    public Event entityFromRequestBody(EventRequestBody request, User user) {
         try {
             Event event = new Event();
 

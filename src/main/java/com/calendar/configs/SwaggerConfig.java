@@ -41,7 +41,7 @@ public class SwaggerConfig {
 
         Parameter authTokenHeader =
                 new ParameterBuilder()
-                        .name("Bearer токен авторизации") // name of the header
+                        .name("authorization") // name of the header
                         .modelRef(new ModelRef("string")) // data-type of the header
                         .required(false) // required/optional
                         .parameterType("header") // for query-param, this value can be 'query'

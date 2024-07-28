@@ -4,7 +4,7 @@ import com.calendar.exceptions.BadRequestException;
 import com.calendar.exceptions.NotFoundException;
 import com.calendar.models.User;
 import com.calendar.repositories.UserRepository;
-import com.calendar.requests.UserPostRequest;
+import com.calendar.requests.UserRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService implements AuthService<User>{
-    UserRepository repository;
+    private UserRepository repository;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -37,24 +37,12 @@ public class UserService implements AuthService<User>{
                 .orElseThrow(() -> new NotFoundException(String.format("Нет пользователя с данным id=%s", id)));
     }
 
-    public User createUser(UserPostRequest userPostRequest){
-        String login = userPostRequest.getLogin();
+    public User createUser(User unsavedUser){
+        String login = unsavedUser.getLogin();
         if(repository.findUserByLogin(login).isPresent())
             throw new BadRequestException("login is exist");
 
-
-        User user = new User(
-                userPostRequest.getLogin(),
-                passwordEncoder.encode(userPostRequest.getPassword())
-        )
-                .setAge(userPostRequest.getAge())
-                .setStatus(userPostRequest.isStatus())
-                .setFio(userPostRequest.getFio())
-                .setEmail(userPostRequest.getEmail())
-                .setRole(userPostRequest.getRoleOrDefault())
-                .setSex(userPostRequest.getSexOrDefault());
-
-        return repository.save(user);
+        return repository.save(unsavedUser);
     }
 
     public List<User> active(List<User> users){

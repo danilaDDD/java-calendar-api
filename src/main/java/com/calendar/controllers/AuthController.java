@@ -1,7 +1,7 @@
 package com.calendar.controllers;
 
 import com.calendar.components.Secrets;
-import com.calendar.requests.AuthRequest;
+import com.calendar.requests.AuthRequestBody;
 import com.calendar.responses.AuthResponse;
 import com.calendar.exceptions.GenerateJWTTokenException;
 import com.calendar.models.ApiClient;
@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -31,10 +30,10 @@ public class AuthController {
     @PostMapping("/get-token/")
     @ApiOperation(
             value = "Генерация первичного токена авторизации",
-            httpMethod = "GET",
-            response = Json.class
+            httpMethod = "POST",
+            response = AuthResponse.class
     )
-    public ResponseEntity<AuthResponse> getToken(@Valid @RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponse> getToken(@Valid @RequestBody AuthRequestBody request) {
         Optional<ApiClient> clientOptional = apiClientService.findByLoginAndPassword(request.getLogin(), request.getPassword());
         if(clientOptional.isPresent()) {
             String token = jwtProvider.generateClientToken(clientOptional.get());

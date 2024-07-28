@@ -4,14 +4,12 @@ import com.calendar.models.Event;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
 
-@Component
 @Setter
 @Getter
-public class EventPostRequest {
+public class EventPostRequestBody implements EventRequestBody {
     @NotNull
     String name;
     @Nullable
