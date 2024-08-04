@@ -79,8 +79,10 @@ public class User extends BaseEntity implements AuthEntity{
 
     @Override
     public boolean equals(Object o) {
-        User other = (User)o;
-        return other.id.equals(other.getId());
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
     }
 
     @Override
@@ -108,13 +110,13 @@ public class User extends BaseEntity implements AuthEntity{
         this.encodedPassword = encodedPassword;
     }
 
-    public static enum Sex{
+    public enum Sex{
         MALE,
         FEMALE,
         UNKNOWN
     }
 
-    public static enum Role{
+    public enum Role{
         ADMIN,
         USER
     }
