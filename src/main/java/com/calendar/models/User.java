@@ -4,22 +4,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 @Accessors(chain = true)
-@javax.persistence.Entity
+@Entity
 @Table(name = "users")
 @NoArgsConstructor
+@Setter
+@Getter
 public class User extends BaseEntity implements AuthEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter private Long id;
 
+    @Size(min = 3)
     @Column(unique = true)
     private String login;
 
@@ -28,25 +36,28 @@ public class User extends BaseEntity implements AuthEntity{
 
     @Column
     @Nullable
-    @Setter @Getter private String fio;
+    @Size(min = 5, max = 100)
+    private String fio;
 
     @Column
     @Nullable
-    @Setter @Getter private String email;
+    @Email
+    private String email;
 
     @Column
-    @Nullable
-    @Setter @Getter private int age;
+    @NotNull
+    @Range(min = 5, max = 100)
+    private int age;
 
     @Column
-    @Setter @Getter private boolean status = true;
+    private boolean status = true;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    @Setter @Getter private Sex sex = Sex.UNKNOWN;
+    private Sex sex = Sex.UNKNOWN;
 
     @Column(nullable = false)
-    @Getter @Setter private Role role = Role.USER;
+    private Role role = Role.USER;
 
     @Column(nullable = false)
     @Getter private LocalDateTime created = LocalDateTime.now();

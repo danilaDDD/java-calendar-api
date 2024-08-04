@@ -9,7 +9,7 @@ public interface DateFormatter {
 
     LocalDate parseDate(String data) throws DateTimeParseException;
 
-    String printDateTime(LocalDateTime dateTime);
+    String formatDateTime(LocalDateTime dateTime);
 
-    String printDate(LocalDate date);
+    String formatDate(LocalDate date);
 }
