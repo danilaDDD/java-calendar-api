@@ -6,10 +6,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import com.calendar.constants.Constants;
+
 @Component
 public class SimpleDateFormatter implements DateFormatter {
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(Constants.DATE_TIME_FORMAT);
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMAT);
 
     @Override
     public LocalDateTime parseDateTime(String data) {
@@ -22,12 +24,12 @@ public class SimpleDateFormatter implements DateFormatter {
     }
 
     @Override
-    public String printDateTime(LocalDateTime dateTime) {
+    public String formatDateTime(LocalDateTime dateTime) {
         return dateTime.format(dateTimeFormatter);
     }
 
     @Override
-    public String printDate(LocalDate date) {
+    public String formatDate(LocalDate date) {
         return date.format(dateFormatter);
     }
 }

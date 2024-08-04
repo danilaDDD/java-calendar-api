@@ -1,9 +1,12 @@
 package com.calendar.models;
 
+import com.calendar.constants.Constants;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -17,6 +20,7 @@ public class Event extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter private Long id;
 
+    @Size(min = 3)
     @Column(nullable = false, length = 300)
     private String name;
 
@@ -33,6 +37,7 @@ public class Event extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private EventStatus status = EventStatus.ENABLE;
 
+    @DateTimeFormat(pattern = Constants.DATE_TIME_FORMAT)
     @Column(nullable = false)
     private LocalDateTime played;
 
