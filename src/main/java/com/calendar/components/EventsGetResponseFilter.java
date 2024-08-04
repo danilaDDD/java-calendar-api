@@ -17,10 +17,9 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class EventsGetResponseFilter {
     private EventService eventService;
-    //@FIXME DateFormater is not autowired
     private final DateFormatter dateFormatter;
 
-    public List<Event> filter(String stringStatus,
+    public List<Event> filter(Event.EventStatus status,
                               String fromDateString, String toDateString,
                               Long userId) {
         try {
@@ -28,9 +27,8 @@ public class EventsGetResponseFilter {
 
             Stream<Event> eventsStream = events.stream();
 
-            if (stringStatus != null) {
-                Event.EventStatus eventStatus = Event.EventStatus.valueOf(stringStatus);
-                eventsStream = eventsStream.filter(event -> event.getStatus().equals(eventStatus));
+            if (status != null) {
+                eventsStream = eventsStream.filter(event -> event.getStatus().equals(status));
             }
 
             if (fromDateString != null) {
