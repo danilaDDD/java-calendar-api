@@ -87,7 +87,7 @@ public class User extends BaseEntity implements AuthEntity{
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.login, this.encodedPassword);
+        return Objects.hash(this.id);
     }
 
     @Override
