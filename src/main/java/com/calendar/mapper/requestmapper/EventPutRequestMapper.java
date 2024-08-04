@@ -1,15 +1,9 @@
 package com.calendar.mapper.requestmapper;
 
-import com.calendar.components.DateFormatter;
-import com.calendar.exceptions.BadRequestException;
 import com.calendar.models.Event;
-import com.calendar.models.User;
 import com.calendar.requests.EventRequestBody;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 
 @Component
 public class EventPutRequestMapper implements PutRequestEntityMapper<Event, EventRequestBody> {
