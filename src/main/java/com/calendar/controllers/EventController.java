@@ -49,9 +49,9 @@ public class EventController {
     )
     public EventsResponse findAll(
             @ApiParam(name = "Статус события", value = "Статус события", example = "ENABLE")
-            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "status", required = false) Event.EventStatus status,
 
-            @ApiParam(name="Дата начиная с" , value = "Дата и время", example = "01-12-1996 00:12")
+            @ApiParam(name="Дата начиная с" , value = "Дата и время", example = "01-12-2024 00:12")
             @RequestParam(name = "from", required = false) String fromDateString,
 
             @ApiParam(name="Дата до" , value = "Дата и время", example = "01-12-1996 00:12")
