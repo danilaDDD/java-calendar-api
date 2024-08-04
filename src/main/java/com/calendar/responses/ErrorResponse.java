@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Data
 @Accessors(chain = true)
-public class DoneResponse {
+public class ErrorResponse {
 
     private boolean success = true;
 
@@ -18,7 +18,7 @@ public class DoneResponse {
     private int httpStatusCode;
     private Set<String> errors = new HashSet<>();
 
-    public DoneResponse addError(String error){
+    public ErrorResponse addError(String error){
         this.setSuccess(false);
 
         errors.add(error);
@@ -26,7 +26,7 @@ public class DoneResponse {
         return this;
     }
 
-    public DoneResponse setHttpStatus(HttpStatus status){
+    public ErrorResponse setHttpStatus(HttpStatus status){
         this.httpStatus = status;
 
         this.setHttpStatusCode(status.value());

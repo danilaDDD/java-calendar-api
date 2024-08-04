@@ -8,8 +8,11 @@ import com.calendar.models.ApiClient;
 import com.calendar.services.ApiClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /*
@@ -20,6 +23,13 @@ public class CheckApiClientTokenFilter implements Filter {
     private AuthHandler<ApiClient> authHandler;
     private ApiClientService apiClientService;
     private Secrets secrets;
+
+    private HandlerExceptionResolver handlerExceptionResolver;
+
+    @Autowired
+    public void setHandlerExceptionResolver(HandlerExceptionResolver handlerExceptionResolver) {
+        this.handlerExceptionResolver = handlerExceptionResolver;
+    }
 
     @Autowired
     public void setAuthHandler(AuthHandler<ApiClient> authHandler) {
@@ -45,7 +55,8 @@ public class CheckApiClientTokenFilter implements Filter {
                     this.apiClientService, this.secrets.getApiClientSecret());
 
         } catch (UnauthorizedRequestException e) {
-            response = FiltersUtils.createRejectResponse(response);
+            this.handlerExceptionResolver
+                    .resolveException((HttpServletRequest) request, (HttpServletResponse) response, null, e);
         }
 
         chain.doFilter(request, response);

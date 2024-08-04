@@ -7,8 +7,11 @@ import com.calendar.models.User;
 import com.calendar.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
@@ -16,6 +19,13 @@ public class CheckUserTokenFilter implements Filter {
     private AuthHandler<User> authHandler;
     private UserService userService;
     private Secrets secrets;
+
+    private HandlerExceptionResolver handlerExceptionResolver;
+
+    @Autowired
+    public void setHandlerExceptionResolver(HandlerExceptionResolver handlerExceptionResolver) {
+        this.handlerExceptionResolver = handlerExceptionResolver;
+    }
 
     @Autowired
     public void setAuthHandler(AuthHandler<User> authHandler) {
@@ -40,7 +50,8 @@ public class CheckUserTokenFilter implements Filter {
             request.setAttribute("userId", user.getId());
 
         } catch (UnauthorizedRequestException e) {
-            response = FiltersUtils.createRejectResponse(response);
+            this.handlerExceptionResolver
+                    .resolveException((HttpServletRequest) request, (HttpServletResponse) response, null, e);
         }
 
         filterChain.doFilter(request, response);

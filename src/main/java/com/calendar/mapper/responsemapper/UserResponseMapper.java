@@ -5,6 +5,8 @@ import com.calendar.responses.UserResponse;
 import com.calendar.responses.UsersResponse;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class UserResponseMapper extends AbstractEntityResponseMapper<User, UserResponse, UsersResponse>{
     @Override
@@ -16,5 +18,10 @@ public class UserResponseMapper extends AbstractEntityResponseMapper<User, UserR
                 .setStatus(user.isStatus())
                 .setSex(user.getSex().toString())
                 .setId(user.getId());
+    }
+
+    @Override
+    public UsersResponse fromEntityItemList(List<UserResponse> entityItemList) {
+        return new UsersResponse(entityItemList);
     }
 }
