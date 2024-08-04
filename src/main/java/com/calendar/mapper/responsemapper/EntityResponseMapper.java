@@ -11,5 +11,7 @@ public interface EntityResponseMapper<E extends BaseEntity, R extends SuccessEnt
 
         R entityToResponse(E entity);
 
+        RS fromEntityItemList(List<R> entityItemList);
+
         RS entitiesToResponse(List<E> entityList);
 }

@@ -7,6 +7,9 @@ import com.calendar.models.Event;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 @AllArgsConstructor
 public class EventResponseMapper extends AbstractEntityResponseMapper<Event, EventResponse, EventsResponse> {
@@ -19,7 +22,12 @@ public class EventResponseMapper extends AbstractEntityResponseMapper<Event, Eve
                 .setName(event.getName())
                 .setComment(event.getComment())
                 .setStatus(event.getStatus())
-                .setPlayed(dateFormatter.printDateTime(event.getPlayed()))
+                .setPlayed(dateFormatter.formatDateTime(event.getPlayed()))
                 .setUser(event.getUser().getLogin());
+    }
+
+    @Override
+    public EventsResponse fromEntityItemList(List<EventResponse> entityItemList) {
+        return new EventsResponse(entityItemList);
     }
 }

@@ -2,10 +2,12 @@ package com.calendar.requests;
 
 import com.calendar.models.Event;
 
+import java.time.LocalDateTime;
+
 public interface EventRequestBody extends RequestBody{
     String getName();
 
-    String getPlayed();
+    LocalDateTime getPlayed();
 
     String getComment();
 

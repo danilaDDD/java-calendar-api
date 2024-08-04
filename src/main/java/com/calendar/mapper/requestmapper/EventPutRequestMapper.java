@@ -12,36 +12,25 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
 @Component
-@AllArgsConstructor
 public class EventPutRequestMapper implements PutRequestEntityMapper<Event, EventRequestBody> {
-    DateFormatter dateFormatter;
-
 
     @Override
     public Event update(Event event, EventRequestBody requestBody) {
-        try {
-            String name = requestBody.getName();
-            if (name != null)
-                event.setName(name);
 
-            String comment = requestBody.getComment();
-            if (comment != null)
-                event.setComment(comment);
+        String name = requestBody.getName();
+        if (name != null)
+            event.setName(name);
 
-            String status = String.valueOf(requestBody.getStatus());
-            if (status != null)
-                event.setStatus(Event.EventStatus.valueOf(status));
+        String comment = requestBody.getComment();
+        if (comment != null)
+            event.setComment(comment);
 
-            String playedString = requestBody.getPlayed();
-            if (playedString != null) {
-                LocalDateTime played = dateFormatter.parseDateTime(playedString);
-                if (played.compareTo(LocalDateTime.now()) > -1)
-                    event.setPlayed(played);
-            }
+        if (requestBody.getStatus() != null)
+            event.setStatus(requestBody.getStatus());
 
-            return event;
-        } catch (DateTimeParseException e) {
-            throw new BadRequestException("parsed event played date format");
-        }
+        if(requestBody.getPlayed() != null)
+            event.setPlayed(requestBody.getPlayed());
+
+        return event;
     }
 }
